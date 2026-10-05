@@ -622,12 +622,12 @@ function CartPage() {
                             maxLength={15}
                             placeholder="0300 1234567"
                             value={form.phone}
-                            disabled={otpVerified}
+                            disabled={otpVerified || isSignedIn}
                             onChange={(e) => {
                               setForm({ ...form, phone: formatPkPhoneInput(e.target.value) });
-                              if (otpVerified) setOtpVerified(false);
+                              if (otpVerified && !isSignedIn) setOtpVerified(false);
                             }}
-                            className={`${fieldClass("phone")}${otpVerified ? " cursor-not-allowed border-flame/25 bg-flame/5" : ""}`}
+                            className={`${fieldClass("phone")}${otpVerified || isSignedIn ? " cursor-not-allowed border-flame/25 bg-flame/5" : ""}`}
                           />
                           {touched.phone && errors.phone && (
                             <span className="mt-1 block font-body text-[11px] font-semibold text-flame">
