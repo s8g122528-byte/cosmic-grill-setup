@@ -1,4 +1,5 @@
 # Menu reference update
+- [x] Refresh cart layout, reference-style payment selector, compact OTP and verified phone lock. Verified real menu-to-cart navigation and all payment choices; mocked OTP send/verify tests pass. No real OTP or order was sent.
 - [x] Generate five transparent, consistently sized menu food images.
 - [x] Apply images only within the menu and add reduced-motion-safe image animation.
 - [x] Verify all five transparent images load across 15 matching dishes; 22 cards, filtering and cart confirmation work without page errors.

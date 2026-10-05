@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { AnimatePresence, motion } from "framer-motion";
-import { Banknote, Check, ChevronLeft, CircleDollarSign, Loader2, LockKeyhole, MapPin, Minus, Plus, Trash2, PlusCircle, ShieldCheck, Smartphone, UtensilsCrossed, WalletCards } from "lucide-react";
+import { motion, useReducedMotion } from "framer-motion";
+import { Banknote, Check, ChevronLeft, Bot, Loader2, LockKeyhole, MapPin, Minus, Plus, Trash2, PlusCircle, ShieldCheck, Smartphone, UtensilsCrossed, WalletCards } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -75,10 +75,10 @@ export const Route = createFileRoute("/cart")({
 
 type FieldKey = "name" | "phone" | "street" | "area" | "city" | "notes";
 
-const MotionButton = motion.create(Button);
 
 function CartPage() {
   const navigate = useNavigate();
+  const reduceMotion = useReducedMotion();
   const { items, selected, selectedSubtotal: subtotal } = useCart();
   const { isSignedIn, isLoading } = useSession();
 
@@ -399,9 +399,9 @@ function CartPage() {
 
         <div className="mt-4 flex flex-col gap-5 border-b border-charcoal/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
-            <span className="inline-flex items-center gap-2 font-display text-[11px] font-extrabold uppercase tracking-[0.16em] text-flame"><UtensilsCrossed className="h-4 w-4" aria-hidden="true" /> Kennedy checkout caddy</span>
-            <h1 className="mt-1 font-display text-3xl font-extrabold uppercase text-charcoal sm:text-5xl">Your order, guided</h1>
-            <p className="mt-2 max-w-xl font-body text-sm text-charcoal/65">We’ll keep every choice together and show what still needs attention.</p>
+            <span className="inline-flex items-center gap-2 font-display text-[11px] font-extrabold uppercase tracking-[0.16em] text-flame"><UtensilsCrossed className="h-4 w-4" aria-hidden="true" /> Kennedy Moon Grill</span>
+            <h1 className="mt-1 font-display text-3xl font-extrabold uppercase text-charcoal sm:text-5xl">Your cart</h1>
+            
           </div>
           <ol className="checkout-progress" aria-label="Checkout progress">
             {["Cart", "Verify", "Pay"].map((label, index) => {
@@ -422,7 +422,7 @@ function CartPage() {
             .
           </p>
         ) : (
-          <div className="mt-6 grid gap-8 lg:grid-cols-[minmax(0,1.45fr)_minmax(20rem,.8fr)]">
+          <div className="mt-6 checkout-layout grid gap-8 lg:grid-cols-[minmax(0,1.35fr)_minmax(22rem,1fr)]">
             {/* items + checkout form */}
             <div>
               <div className="mb-3 flex items-center justify-between rounded-lg border border-charcoal/10 bg-cream-deep/45 px-4 py-2.5">
@@ -441,8 +441,8 @@ function CartPage() {
                 {items.map((i) => (
                   <div
                     key={`${i.slug}-${i.size}`}
-                    className={`checkout-item flex items-center gap-3 rounded-lg border p-3 transition-colors ${
-                      i.selected ? "border-flame/35 bg-flame/5" : "border-charcoal/10 bg-cream-deep/35"
+                    className={`checkout-item flex items-center gap-3 border-b py-4 transition-colors ${
+                      i.selected ? "border-charcoal/12" : "border-charcoal/10 opacity-60"
                     }`}
                   >
                     <button
@@ -506,7 +506,7 @@ function CartPage() {
               <h2 className="mt-8 font-display text-lg font-extrabold uppercase text-charcoal">
                 How do you want it?
               </h2>
-              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-3">
+              <div className="mt-3 grid grid-cols-3 gap-2">
                 {(
                   [
                     ["delivery", "Delivery", "To your door"],
@@ -587,10 +587,10 @@ function CartPage() {
                     charge.
                   </p>
 
-                  {!isSignedIn && (
-                    <div className="mt-4 rounded-2xl border-2 border-charcoal/10 bg-cream p-4">
+                  {(!isSignedIn || otpVerified) && (
+                    <div className="mt-4 border-t border-charcoal/10 pt-4">
                       <h3 className="font-display text-sm font-extrabold uppercase text-charcoal">
-                        Customer Details &amp; Mobile Verification
+                        Customer details
                       </h3>
                       <p className="mt-0.5 text-xs text-charcoal/60 font-body">
                         Enter your mobile number to receive your pickup ticket and order status updates.
@@ -627,7 +627,7 @@ function CartPage() {
                               setForm({ ...form, phone: formatPkPhoneInput(e.target.value) });
                               if (otpVerified) setOtpVerified(false);
                             }}
-                            className={`${fieldClass("phone")}${otpVerified ? " cursor-not-allowed opacity-70 bg-green-50/60" : ""}`}
+                            className={`${fieldClass("phone")}${otpVerified ? " cursor-not-allowed border-flame/25 bg-flame/5" : ""}`}
                           />
                           {touched.phone && errors.phone && (
                             <span className="mt-1 block font-body text-[11px] font-semibold text-flame">
@@ -710,16 +710,17 @@ function CartPage() {
                       ["street", "House / street"],
                       ["area", "Area"],
                       ["city", "City"],
-                      ["notes", "Notes for the rider (optional)"],
+                      ["notes", "Notes for the caddy (optional)"],
                     ] as const
                   ).map(([key, label]) => (
                     <Fragment key={key}>
                     <div className={key === "notes" ? "sm:col-span-2" : ""}>
-                      <label className="block font-body text-[11px] uppercase tracking-widest text-charcoal/60 font-bold">
+                      <label htmlFor={`checkout-${key}`} className="block font-body text-[11px] uppercase tracking-widest text-charcoal/60 font-bold">
                         {label}
                       </label>
                       <div className={key === "phone" ? "relative" : ""}>
                       <input
+                        id={`checkout-${key}`}
                         value={form[key]}
                         {...(key === "phone"
                           ? {
@@ -728,8 +729,8 @@ function CartPage() {
                               maxLength: 15,
                               placeholder: "0300 1234567",
                               autoComplete: "tel",
-                              disabled: otpVerified && !isSignedIn,
-                              readOnly: otpVerified && !isSignedIn,
+                              disabled: otpVerified,
+                              readOnly: otpVerified,
                             }
                           : {})}
                         aria-invalid={Boolean(touched[key] && errors[key])}
@@ -739,9 +740,9 @@ function CartPage() {
                           setForm((f) => ({ ...f, [key]: val }));
                           if (key === "phone" && otpVerified) setOtpVerified(false);
                         }}
-                        className={`${fieldClass(key)}${key === "phone" && otpVerified && !isSignedIn ? " cursor-not-allowed border-flame/25 bg-flame/5 pr-10" : ""}`}
+                        className={`${fieldClass(key)}${key === "phone" && otpVerified ? " cursor-not-allowed border-flame/25 bg-flame/5 pr-10" : ""}`}
                       />
-                      {key === "phone" && otpVerified && !isSignedIn && <LockKeyhole className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-flame" aria-hidden="true" />}
+                      {key === "phone" && otpVerified && <LockKeyhole className="absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-flame" aria-hidden="true" />}
                       </div>
                       {touched[key] && errors[key] && (
                         <span className="mt-1 block font-body text-[11px] font-semibold text-flame">
@@ -749,7 +750,7 @@ function CartPage() {
                         </span>
                       )}
                     </div>
-                    {key === "phone" && !isSignedIn && (
+                    {key === "phone" && (!isSignedIn || otpVerified) && (
                       <div className="sm:col-span-2 -mt-1">
                         <LuxuryOtpWidget
                           phone={form.phone}
@@ -786,45 +787,31 @@ function CartPage() {
                   ? "Finding you…"
                   : activeCoords
                     ? `Location shared · ${activeCoords.lat.toFixed(4)}, ${activeCoords.lng.toFixed(4)}`
-                    : "Share my live location (required)"}
+                    : "Share delivery location"}
               </button>
               )}
             </div>
 
             {/* summary */}
-            <aside className="checkout-summary h-fit rounded-xl border border-charcoal/10 bg-cream-deep/55 p-5 lg:sticky lg:top-6">
-              <div className="flex items-center justify-between gap-3">
-                <div><span className="font-body text-[10px] font-bold uppercase tracking-[0.14em] text-flame">Caddy step 3</span><h2 className="font-display text-lg font-extrabold uppercase text-charcoal">Choose payment</h2></div>
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-charcoal text-cream"><CircleDollarSign className="h-5 w-5" aria-hidden="true" /></span>
+            <aside className="checkout-summary h-fit lg:sticky lg:top-6">
+              <div className="checkout-caddy">
+                <motion.span initial={reduceMotion ? false : { rotate: -8, scale: .9 }} animate={{ rotate: 0, scale: 1 }} className="checkout-caddy__face"><Bot className="h-8 w-8" aria-hidden="true" /></motion.span>
+                <div className="min-w-0"><span className="font-display text-sm font-extrabold text-charcoal">Your checkout caddy</span><p className="font-body text-xs text-charcoal/65" role="status">{placing ? "Sending your order to the kitchen…" : otpVerified || isSignedIn ? "Phone ready. Choose your payment." : "Your order is here. Let’s verify your phone."}</p></div>
               </div>
-              <div className="mt-3 space-y-2">
+              <h2 className="mt-6 font-display text-lg font-extrabold uppercase text-charcoal">Payment</h2>
+              <div className="checkout-payments" role="group" aria-label="Payment method">
+                <span className="checkout-payments__slider" aria-hidden="true" />
                 {PAYMENTS.map((p) => {
                   const PaymentIcon = paymentIcon(p.id);
-                  const selectedPayment = payment === p.id;
-                  return (
-                  <MotionButton
-                    key={p.id}
-                    type="button"
-                    onClick={() => setPayment(p.id)}
-                    whileTap={{ scale: 0.985 }}
-                    animate={{ x: selectedPayment ? 3 : 0 }}
-                    className={`payment-choice flex w-full items-center gap-3 rounded-lg border-2 p-3 text-left ${
-                      selectedPayment ? "is-selected border-flame bg-flame/5" : "border-charcoal/12 bg-cream/55"
-                    }`}
-                  >
-                    <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-lg ${selectedPayment ? "bg-flame text-cream" : "bg-charcoal/8 text-charcoal"}`}><PaymentIcon className="h-5 w-5" aria-hidden="true" /></span>
-                    <span className="min-w-0 flex-1">
-                      <span className="block font-display text-sm font-extrabold uppercase text-charcoal">
-                        {p.label}
-                      </span>
-                      <span className="block font-body text-xs text-charcoal/60">{p.note}</span>
-                    </span>
-                    {p.fee > 0 && (
-                      <span className="font-body text-xs text-charcoal/60">+Rs {p.fee}</span>
-                    )}
-                    <AnimatePresence>{selectedPayment && <motion.span initial={{ scale: 0, rotate: -40 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0 }} className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-flame text-cream"><Check className="h-4 w-4" aria-hidden="true" /></motion.span>}</AnimatePresence>
-                  </MotionButton>
-                );})}
+                  return <Button variant="ghost" key={p.id} type="button" aria-pressed={payment === p.id} onClick={() => setPayment(p.id)} className="checkout-payments__option">
+                    <PaymentIcon aria-hidden="true" />
+                    <span>{p.id === "cod" ? "Cash" : p.label}</span>
+                  </Button>;
+                })}
+              </div>
+              <div className="checkout-payment-note" aria-live="polite">
+                <Check className="h-4 w-4 shrink-0 text-flame" aria-hidden="true" />
+                <span>{PAYMENTS.find((p) => p.id === payment)?.note}{fee > 0 ? ` · +Rs ${fee} fee` : ""}</span>
               </div>
 
               {/* SLICE 2.5 — discount code */}
@@ -920,19 +907,19 @@ function CartPage() {
                 </div>
               </dl>
 
-              <button
+              <Button variant="ghost"
                 type="button"
                 disabled={placing || Boolean(blockReason)}
                 aria-busy={placing}
                 {...(blockReason ? { title: blockReason } : {})}
                 onClick={() => void placeOrder()}
-                className="mt-5 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-flame py-4 font-display text-sm font-extrabold uppercase tracking-[0.16em] text-cream shadow-[0_14px_30px_rgba(180,40,20,0.35)] disabled:cursor-not-allowed disabled:opacity-60"
+                className="mt-5 flex min-h-[56px] w-full items-center justify-center gap-2 rounded-full bg-flame py-4 font-display text-sm font-extrabold uppercase tracking-[0.16em] text-cream shadow-pill disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {placing && <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />}
                 {placing
                   ? "Placing your order…"
                   : `Place order · Rs ${total}`}
-              </button>
+              </Button>
 
               <p
                 className={`mt-2 text-center font-body text-[11px] ${
