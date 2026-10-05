@@ -212,8 +212,8 @@ function AdminLayout() {
             to="/admin/whatsapp"
             className={`block rounded-2xl border p-3.5 text-xs transition-all hover:scale-[1.02] shadow-md ${
               waConnected
-                ? "border-emerald-500/30 bg-emerald-950/20 hover:border-emerald-500/50 hover:bg-emerald-950/30"
-                : "border-amber-500/30 bg-amber-950/20 hover:border-amber-500/50 hover:bg-amber-950/30"
+                ? "border-jade/30 bg-jade/5 hover:border-jade/50"
+                : "border-amber-lux/30 bg-amber-lux/5 hover:border-amber-lux/50"
             }`}
           >
             <div className="flex items-center justify-between mb-1.5">
@@ -221,32 +221,30 @@ function AdminLayout() {
                 <span className="relative flex h-2.5 w-2.5">
                   {waConnected ? (
                     <>
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-jade" />
                     </>
                   ) : (
                     <>
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75" />
-                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+                      <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-lux" />
                     </>
                   )}
                 </span>
-                <span className="font-bold text-white flex items-center gap-1.5">
-                  <MessageCircle className="w-3.5 h-3.5 text-amber-400" />
+                <span className="font-bold text-frost flex items-center gap-1.5">
+                  <MessageCircle className="w-3.5 h-3.5 text-jade" />
                   WhatsApp
                 </span>
               </div>
               <span
                 className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full border ${
                   waConnected
-                    ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                    : "bg-amber-500/20 text-amber-300 border-amber-500/30 animate-pulse"
+                    ? "bg-jade/10 text-jade border-jade/30"
+                    : "bg-amber-lux/10 text-amber-lux border-amber-lux/30"
                 }`}
               >
                 {waConnected === null ? "Checking" : waConnected ? "Online" : "Scan QR"}
               </span>
             </div>
-            <p className="text-[11px] text-[#8a7e6e] truncate">
+            <p className="text-[11px] text-mist truncate">
               {waConnected && waPhone ? `+${waPhone}` : "Tap to open QR & connect"}
             </p>
           </Link>
