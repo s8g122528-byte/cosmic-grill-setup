@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { X, Plus, Trash2, ShoppingBag, Utensils, User, Phone, MapPin, CreditCard, Sparkles, Loader2 } from "lucide-react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { X, ShoppingBag, Utensils, User, Phone, MapPin, CreditCard, Sparkles, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "@/lib/api/client";
 import { syncLiveBackendData } from "@/lib/admin-store";
@@ -20,7 +20,12 @@ interface DishOption {
   sizes?: { id: number; size: string; price: number }[];
 }
 
+const labelCls = "text-[11px] font-black uppercase tracking-[0.16em] text-lux/80";
+const inputCls =
+  "w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none transition-colors";
+
 export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalProps) {
+  const reduce = useReducedMotion();
   const [orderType, setOrderType] = useState<"delivery" | "takeaway" | "dine_in">("delivery");
   const [customerName, setCustomerName] = useState("");
   const [customerPhone, setCustomerPhone] = useState("");
@@ -39,6 +44,16 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
   const [qty, setQty] = useState(1);
   const [internalNotes, setInternalNotes] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const rise = (i: number) => ({
+    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: {
+      duration: 0.4,
+      delay: 0.05 + i * 0.05,
+      ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+    },
+  });
 
   useEffect(() => {
     if (!open) return;
@@ -181,15 +196,16 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
           />
 
           <motion.div
-            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            initial={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-lux/30 bg-[#161413] p-6 text-cream shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
+            exit={reduce ? { opacity: 0 } : { scale: 0.95, opacity: 0, y: 20 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-lux/30 bg-gradient-to-b from-[#181614] to-[#121110] p-6 text-cream shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-lux/10 text-lux border border-lux/30">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl border border-lux/30 bg-gradient-to-br from-flame to-[#D94824] text-cream shadow-[0_6px_18px_rgba(184,42,20,0.4)]">
                   <ShoppingBag className="h-5 w-5" />
                 </div>
                 <div>
@@ -204,18 +220,19 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-2 text-cream/50 hover:bg-white/10 hover:text-cream transition"
+                className="rounded-full p-2 text-cream/50 hover:bg-white/10 hover:text-cream transition active:scale-90"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
             <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-              {/* Order Type Buttons */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1.5">
-                  Order Type
-                </label>
+              {/* Order Channel */}
+              <motion.div {...rise(0)}>
+                <div className="mb-1.5 flex items-center gap-1.5">
+                  <ShoppingBag className="h-3.5 w-3.5 text-lux" />
+                  <label className={labelCls}>Order Channel</label>
+                </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[
                     { id: "delivery", label: "Home Delivery" },
@@ -226,9 +243,9 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       key={t.id}
                       type="button"
                       onClick={() => setOrderType(t.id as any)}
-                      className={`rounded-xl border py-2.5 text-xs font-black uppercase tracking-[0.12em] transition ${
+                      className={`rounded-xl border py-2.5 text-xs font-black uppercase tracking-[0.12em] transition active:scale-95 ${
                         orderType === t.id
-                          ? "border-lux bg-lux/20 text-lux shadow-sm"
+                          ? "border-lux bg-lux/20 text-lux shadow-[0_4px_14px_rgba(216,178,92,0.15)]"
                           : "border-white/10 bg-black/30 text-cream/60 hover:border-white/20"
                       }`}
                     >
@@ -236,171 +253,172 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                     </button>
                   ))}
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Customer Details */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
-                    Customer Name
-                  </label>
+              {/* Guest Details */}
+              <motion.div {...rise(1)}>
+                <div className="mb-1.5 flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5 text-lux" />
+                  <label className={labelCls}>Guest Details</label>
+                </div>
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
+                    <User className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-cream/40" />
                     <input
                       type="text"
                       placeholder="e.g. Tariq Mehmood"
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      className={inputCls + " pl-9"}
                     />
                   </div>
-                </div>
 
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
-                    Phone Number
-                  </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
+                    <Phone className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-cream/40" />
                     <input
                       type="text"
                       placeholder="03xx xxxxxxx"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(formatPkPhoneInput(e.target.value))}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      className={inputCls + " pl-9"}
                     />
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
-              {/* Address details if delivery */}
+              {/* Delivery Destination */}
               {orderType === "delivery" && (
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <div className="sm:col-span-2">
-                    <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
-                      Street / House
-                    </label>
-                    <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
+                <motion.div {...rise(2)}>
+                  <div className="mb-1.5 flex items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 text-lux" />
+                    <label className={labelCls}>Delivery Destination</label>
+                  </div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+                    <div className="relative sm:col-span-2">
+                      <MapPin className="pointer-events-none absolute left-3 top-3 h-4 w-4 text-cream/40" />
                       <input
                         type="text"
                         placeholder="House # / Street, Mohalla"
                         value={street}
                         onChange={(e) => setStreet(e.target.value)}
-                        className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                        className={inputCls + " pl-9"}
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
-                      Area / Zone
-                    </label>
                     <input
                       type="text"
                       placeholder="Model Town"
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      className={inputCls}
                     />
                   </div>
-                </div>
+                </motion.div>
               )}
 
-              {/* Dish Selection & Sizing */}
-              <div className="rounded-2xl border border-white/10 bg-black/20 p-4 space-y-3">
-                <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-black uppercase tracking-[0.16em] text-lux">
-                    Dish & Menu Selection
-                  </span>
+              {/* Dish & Menu Selection */}
+              <motion.div
+                {...rise(orderType === "delivery" ? 3 : 2)}
+                className="rounded-2xl border border-white/10 bg-black/20 p-4"
+              >
+                <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2">
+                  <div className="flex items-center gap-1.5">
+                    <Utensils className="h-3.5 w-3.5 text-lux" />
+                    <span className="text-[11px] font-black uppercase tracking-[0.16em] text-lux">
+                      Dish &amp; Menu Selection
+                    </span>
+                  </div>
                   <span className="text-[10px] text-cream/50">Kennedy Moon Grill Menu</span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
-                      Select Dish
-                    </label>
-                    <select
-                      value={selectedDishId}
-                      onChange={(e) => handleDishChange(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    >
-                      {availableDishes.map((d) => (
-                        <option key={d.id} value={d.id}>
-                          {d.name} — Rs {d.price}
-                        </option>
-                      ))}
-                      <option value="custom">+ Custom / Manual Dish</option>
-                    </select>
+                <div className="space-y-3">
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Select Dish
+                      </label>
+                      <select
+                        value={selectedDishId}
+                        onChange={(e) => handleDishChange(e.target.value)}
+                        className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none transition-colors"
+                      >
+                        {availableDishes.map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {d.name} — Rs {d.price}
+                          </option>
+                        ))}
+                        <option value="custom">+ Custom / Manual Dish</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Dish Name (Display)
+                      </label>
+                      <input
+                        type="text"
+                        value={customDishName}
+                        onChange={(e) => setCustomDishName(e.target.value)}
+                        placeholder="Dish Name"
+                        className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] px-3 py-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none transition-colors"
+                      />
+                    </div>
                   </div>
 
-                  <div>
-                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
-                      Dish Name (Display)
-                    </label>
-                    <input
-                      type="text"
-                      value={customDishName}
-                      onChange={(e) => setCustomDishName(e.target.value)}
-                      placeholder="Dish Name"
-                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Size Variant
+                      </label>
+                      <input
+                        type="text"
+                        value={selectedSize}
+                        onChange={(e) => handleSizeChange(e.target.value)}
+                        placeholder="Regular / Half / Full"
+                        className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] px-3 py-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Unit Price (PKR)
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={price}
+                        onChange={(e) => setPrice(Number(e.target.value) || 0)}
+                        className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none transition-colors"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Quantity
+                      </label>
+                      <input
+                        type="number"
+                        min={1}
+                        max={99}
+                        value={qty}
+                        onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
+                        className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none transition-colors"
+                      />
+                    </div>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
-                      Size Variant
-                    </label>
-                    <input
-                      type="text"
-                      value={selectedSize}
-                      onChange={(e) => handleSizeChange(e.target.value)}
-                      placeholder="Regular / Half / Full"
-                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
-                      Unit Price (PKR)
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={price}
-                      onChange={(e) => setPrice(Number(e.target.value) || 0)}
-                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
-                      Quantity
-                    </label>
-                    <input
-                      type="number"
-                      min={1}
-                      max={99}
-                      value={qty}
-                      onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
-                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
+              </motion.div>
 
               {/* Status, Priority & Payment */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <motion.div {...rise(orderType === "delivery" ? 4 : 3)} className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
-                    Initial Status
-                  </label>
+                  <div className="mb-1 flex items-center gap-1.5">
+                    <CreditCard className="h-3.5 w-3.5 text-lux" />
+                    <label className={labelCls}>Initial Status</label>
+                  </div>
                   <select
                     value={initialStatus}
                     onChange={(e) => setInitialStatus(e.target.value as any)}
-                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
+                    className={inputCls}
                   >
                     <option value="confirmed">Confirmed (To Kitchen)</option>
                     <option value="kitchen">Cooking in Kitchen</option>
@@ -409,13 +427,13 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
+                  <label className="mb-1 block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80">
                     Priority
                   </label>
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
-                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
+                    className={inputCls}
                   >
                     <option value="normal">Normal</option>
                     <option value="rush">Rush (Express)</option>
@@ -424,24 +442,24 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                 </div>
 
                 <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
+                  <label className="mb-1 block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80">
                     Payment Method
                   </label>
                   <select
                     value={payment}
                     onChange={(e) => setPayment(e.target.value as any)}
-                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
+                    className={inputCls}
                   >
                     <option value="cod">Cash on Delivery (COD)</option>
                     <option value="jazzcash">JazzCash Mobile Wallet</option>
                     <option value="easypaisa">EasyPaisa Mobile Wallet</option>
                   </select>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Notes */}
-              <div>
-                <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1">
+              <motion.div {...rise(orderType === "delivery" ? 5 : 4)}>
+                <label className="mb-1 block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80">
                   Internal Staff Notes (Optional)
                 </label>
                 <input
@@ -449,12 +467,15 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   placeholder="e.g. Extra spicy, table #4, customer wants mint raita"
                   value={internalNotes}
                   onChange={(e) => setInternalNotes(e.target.value)}
-                  className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                  className={inputCls}
                 />
-              </div>
+              </motion.div>
 
               {/* Bill Summary Banner */}
-              <div className="flex items-center justify-between rounded-2xl border border-lux/30 bg-lux/10 p-3.5">
+              <motion.div
+                {...rise(orderType === "delivery" ? 6 : 5)}
+                className="flex items-center justify-between rounded-2xl border border-lux/30 bg-lux/10 p-3.5"
+              >
                 <div>
                   <span className="block text-[10px] font-black uppercase tracking-wider text-lux">
                     Order Bill Total
@@ -468,21 +489,21 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                     Rs {total}
                   </span>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Actions */}
-              <div className="flex items-center justify-end gap-3 pt-2">
+              <motion.div {...rise(orderType === "delivery" ? 7 : 6)} className="flex items-center justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-white/20 px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-cream/70 hover:bg-white/10 transition"
+                  className="rounded-xl border border-white/20 px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-cream/70 transition hover:bg-white/10 active:scale-95"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex items-center gap-2 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_8px_24px_rgba(184,42,20,0.4)] hover:brightness-110 active:scale-95 disabled:opacity-50 transition"
+                  className="flex items-center gap-2 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_8px_24px_rgba(184,42,20,0.4)] transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                 >
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -491,7 +512,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   )}
                   {submitting ? "Placing Order…" : `Place Order · Rs ${total}`}
                 </button>
-              </div>
+              </motion.div>
             </form>
           </motion.div>
         </div>
