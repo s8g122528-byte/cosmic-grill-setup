@@ -48,10 +48,10 @@ export const Route = createFileRoute("/admin/payments")({
 
 const COLORS = ["var(--color-lux)", "var(--color-jade)", "var(--color-amber-lux)", "var(--color-azure)"];
 const tooltipStyle = {
-  background: "var(--color-panel)",
-  border: "1px solid var(--color-line)",
+  background: "oklch(0.22 0.02 40)",
+  border: "1px solid oklch(0.85 0.15 88 / 0.3)",
   borderRadius: 14,
-  color: "var(--color-frost)",
+  color: "oklch(0.947 0.041 87.5)",
   fontSize: 12,
   fontWeight: 700,
 };
@@ -90,9 +90,9 @@ function Payments() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={series} margin={{ left: -10, right: 8 }}>
-                <CartesianGrid stroke="var(--color-line)" vertical={false} />
-                <XAxis dataKey="day" tick={{ fill: "var(--color-slate-dim)", fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fill: "var(--color-slate-dim)", fontSize: 11 }} tickLine={false} axisLine={false} width={62} />
+                <CartesianGrid stroke="oklch(0.947 0.041 87.5 / 0.08)" vertical={false} />
+                <XAxis dataKey="day" tick={{ fill: "oklch(0.947 0.041 87.5 / 0.45)", fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fill: "oklch(0.947 0.041 87.5 / 0.45)", fontSize: 11 }} tickLine={false} axisLine={false} width={62} />
                 <Tooltip contentStyle={tooltipStyle} formatter={(v: number) => money(v)} />
                 <Bar dataKey="revenue" fill="var(--color-lux)" radius={[8, 8, 0, 0]} />
               </BarChart>

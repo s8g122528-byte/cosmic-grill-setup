@@ -14,4 +14,3 @@ Generated menu cutouts are selected by dish name within the menu presentation on
 Takiii uses one guest conversation persisted in browser storage; its current chat and microphone interactions remain presentation-only until server integration is requested.
 Phone verification uses the shared six-cell OTP component across checkout and phone sign-in so autofill, paste, and visual states stay consistent.
 Checkout presentation styles are scoped under checkout-prefixed classes; payment selection reuses existing payment data and verification locks remain visible after session changes so server contracts stay unchanged.
-Admin presentation uses an admin-only theme scope, including open dialogs; shared rider chrome and all authorization, endpoints and URLs remain unchanged to avoid cross-app regressions.

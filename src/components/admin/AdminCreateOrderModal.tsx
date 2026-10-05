@@ -177,17 +177,17 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 admin-modal-overlay"
+            className="fixed inset-0 bg-black/80 backdrop-blur-md"
           />
 
           <motion.div
             initial={{ scale: 0.95, opacity: 0, y: 20 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
             exit={{ scale: 0.95, opacity: 0, y: 20 }}
-            className="admin-modal relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto p-6"
+            className="relative z-10 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-3xl border border-lux/30 bg-[#161413] p-6 text-cream shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-line pb-4">
+            <div className="flex items-center justify-between border-b border-white/10 pb-4">
               <div className="flex items-center gap-3">
                 <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-lux/10 text-lux border border-lux/30">
                   <ShoppingBag className="h-5 w-5" />
@@ -196,7 +196,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   <h2 className="font-hero text-xl font-bold tracking-wide text-lux">
                     Create New Order (POS / Desk)
                   </h2>
-                  <p className="text-xs text-mist">
+                  <p className="text-xs text-cream/60">
                     Place staff orders directly for walk-in counter, phone orders or dine-in.
                   </p>
                 </div>
@@ -204,7 +204,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
               <button
                 type="button"
                 onClick={onClose}
-                className="rounded-full p-2 text-mist hover:bg-white/10 hover:text-frost transition"
+                className="rounded-full p-2 text-cream/50 hover:bg-white/10 hover:text-cream transition"
               >
                 <X className="h-5 w-5" />
               </button>
@@ -216,7 +216,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                 <label className="block text-[11px] font-black uppercase tracking-[0.16em] text-lux/80 mb-1.5">
                   Order Type
                 </label>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   {[
                     { id: "delivery", label: "Home Delivery" },
                     { id: "takeaway", label: "Takeaway / Counter" },
@@ -229,7 +229,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       className={`rounded-xl border py-2.5 text-xs font-black uppercase tracking-[0.12em] transition ${
                         orderType === t.id
                           ? "border-lux bg-lux/20 text-lux shadow-sm"
-                          : "border-line bg-ink text-mist hover:border-line"
+                          : "border-white/10 bg-black/30 text-cream/60 hover:border-white/20"
                       }`}
                     >
                       {t.label}
@@ -245,13 +245,13 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                     Customer Name
                   </label>
                   <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-mist" />
+                    <User className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
                     <input
                       type="text"
                       placeholder="e.g. Tariq Mehmood"
                       value={customerName}
                       onChange={(e) => setCustomerName(e.target.value)}
-                      className="w-full rounded-xl border border-line bg-ink py-2.5 pl-9 pr-3 text-xs text-frost placeholder:text-mist focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
@@ -261,13 +261,13 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                     Phone Number
                   </label>
                   <div className="relative">
-                    <Phone className="absolute left-3 top-3 h-4 w-4 text-mist" />
+                    <Phone className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
                     <input
                       type="text"
                       placeholder="03xx xxxxxxx"
                       value={customerPhone}
                       onChange={(e) => setCustomerPhone(formatPkPhoneInput(e.target.value))}
-                      className="w-full rounded-xl border border-line bg-ink py-2.5 pl-9 pr-3 text-xs text-frost placeholder:text-mist focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
@@ -281,13 +281,13 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       Street / House
                     </label>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-mist" />
+                      <MapPin className="absolute left-3 top-3 h-4 w-4 text-cream/40" />
                       <input
                         type="text"
                         placeholder="House # / Street, Mohalla"
                         value={street}
                         onChange={(e) => setStreet(e.target.value)}
-                        className="w-full rounded-xl border border-line bg-ink py-2.5 pl-9 pr-3 text-xs text-frost placeholder:text-mist focus:border-lux focus:outline-none"
+                        className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 pl-9 pr-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
                       />
                     </div>
                   </div>
@@ -300,30 +300,30 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       placeholder="Model Town"
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      className="w-full rounded-xl border border-line bg-ink py-2.5 px-3 text-xs text-frost placeholder:text-mist focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
               )}
 
               {/* Dish Selection & Sizing */}
-              <div className="rounded-2xl border border-line bg-ink p-4 space-y-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4 space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-[11px] font-black uppercase tracking-[0.16em] text-lux">
                     Dish & Menu Selection
                   </span>
-                  <span className="text-[10px] text-mist">Kennedy Moon Grill Menu</span>
+                  <span className="text-[10px] text-cream/50">Kennedy Moon Grill Menu</span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[10px] text-mist mb-1 uppercase font-bold">
+                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
                       Select Dish
                     </label>
                     <select
                       value={selectedDishId}
                       onChange={(e) => handleDishChange(e.target.value)}
-                      className="w-full rounded-xl border border-line bg-panel py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     >
                       {availableDishes.map((d) => (
                         <option key={d.id} value={d.id}>
@@ -335,7 +335,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-mist mb-1 uppercase font-bold">
+                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
                       Dish Name (Display)
                     </label>
                     <input
@@ -343,14 +343,14 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       value={customDishName}
                       onChange={(e) => setCustomDishName(e.target.value)}
                       placeholder="Dish Name"
-                      className="w-full rounded-xl border border-line bg-panel py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="block text-[10px] text-mist mb-1 uppercase font-bold">
+                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
                       Size Variant
                     </label>
                     <input
@@ -358,12 +358,12 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       value={selectedSize}
                       onChange={(e) => handleSizeChange(e.target.value)}
                       placeholder="Regular / Half / Full"
-                      className="w-full rounded-xl border border-line bg-panel py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-mist mb-1 uppercase font-bold">
+                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
                       Unit Price (PKR)
                     </label>
                     <input
@@ -371,12 +371,12 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       min={0}
                       value={price}
                       onChange={(e) => setPrice(Number(e.target.value) || 0)}
-                      className="w-full rounded-xl border border-line bg-panel py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-[10px] text-mist mb-1 uppercase font-bold">
+                    <label className="block text-[10px] text-cream/60 mb-1 uppercase font-bold">
                       Quantity
                     </label>
                     <input
@@ -385,7 +385,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                       max={99}
                       value={qty}
                       onChange={(e) => setQty(Math.max(1, Number(e.target.value) || 1))}
-                      className="w-full rounded-xl border border-line bg-panel py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-[#1e1c1a] py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
@@ -400,7 +400,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   <select
                     value={initialStatus}
                     onChange={(e) => setInitialStatus(e.target.value as any)}
-                    className="w-full rounded-xl border border-line bg-ink py-2.5 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                   >
                     <option value="confirmed">Confirmed (To Kitchen)</option>
                     <option value="kitchen">Cooking in Kitchen</option>
@@ -415,7 +415,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   <select
                     value={priority}
                     onChange={(e) => setPriority(e.target.value as any)}
-                    className="w-full rounded-xl border border-line bg-ink py-2.5 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                   >
                     <option value="normal">Normal</option>
                     <option value="rush">Rush (Express)</option>
@@ -430,7 +430,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   <select
                     value={payment}
                     onChange={(e) => setPayment(e.target.value as any)}
-                    className="w-full rounded-xl border border-line bg-ink py-2.5 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2.5 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                   >
                     <option value="cod">Cash on Delivery (COD)</option>
                     <option value="jazzcash">JazzCash Mobile Wallet</option>
@@ -449,7 +449,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   placeholder="e.g. Extra spicy, table #4, customer wants mint raita"
                   value={internalNotes}
                   onChange={(e) => setInternalNotes(e.target.value)}
-                  className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost placeholder:text-mist focus:border-lux focus:outline-none"
+                  className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
                 />
               </div>
 
@@ -459,7 +459,7 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                   <span className="block text-[10px] font-black uppercase tracking-wider text-lux">
                     Order Bill Total
                   </span>
-                  <span className="text-xs text-mist">
+                  <span className="text-xs text-cream/70">
                     Subtotal: Rs {subtotal} {deliveryFee > 0 && `· Delivery: Rs ${deliveryFee}`} {codFee > 0 && `· COD Fee: Rs ${codFee}`}
                   </span>
                 </div>
@@ -475,14 +475,14 @@ export function AdminCreateOrderModal({ open, onClose }: AdminCreateOrderModalPr
                 <button
                   type="button"
                   onClick={onClose}
-                  className="rounded-xl border border-line px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-mist hover:bg-white/10 transition"
+                  className="rounded-xl border border-white/20 px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-cream/70 hover:bg-white/10 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="flex items-center gap-2 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-frost shadow-[0_8px_24px_rgba(184,42,20,0.4)] hover:brightness-110 active:scale-95 disabled:opacity-50 transition"
+                  className="flex items-center gap-2 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_8px_24px_rgba(184,42,20,0.4)] hover:brightness-110 active:scale-95 disabled:opacity-50 transition"
                 >
                   {submitting ? (
                     <Loader2 className="h-4 w-4 animate-spin" />

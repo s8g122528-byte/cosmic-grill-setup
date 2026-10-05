@@ -33,7 +33,6 @@ import {
 } from "recharts";
 
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
 import {
   money,
   PAY_STATUS_LABEL,
@@ -331,35 +330,35 @@ type BtnProps = {
 
 export function GoldButton({ children, onClick, disabled, className, type = "button" }: BtnProps) {
   return (
-    <Button variant="ghost" type={type} onClick={onClick} disabled={disabled} className={cn("btn-lux", className)}>
+    <button type={type} onClick={onClick} disabled={disabled} className={cn("btn-lux", className)}>
       {children}
-    </Button>
+    </button>
   );
 }
 
 export function GhostButton({ children, onClick, disabled, className, type = "button" }: BtnProps) {
   return (
-    <Button variant="ghost"
+    <button
       type={type}
       onClick={onClick}
       disabled={disabled}
       className={cn("btn-ghost-lux", className)}
     >
       {children}
-    </Button>
+    </button>
   );
 }
 
 export function DangerButton({ children, onClick, disabled, className, type = "button" }: BtnProps) {
   return (
-    <Button variant="ghost"
+    <button
       type={type}
       onClick={onClick}
       disabled={disabled}
       className={cn("btn-danger-lux", className)}
     >
       {children}
-    </Button>
+    </button>
   );
 }
 
@@ -430,10 +429,15 @@ export function EmptyRow({ children }: { children: ReactNode }) {
 /* ------------------------------------------------------------------ charts */
 
 export const CHART = {
-  lux: "var(--color-lux)", luxDeep: "var(--color-lux-deep)",
-  jade: "var(--color-jade)", azure: "var(--color-azure)",
-  ruby: "var(--color-ruby)", violet: "var(--color-violet-lux)",
-  amber: "var(--color-amber-lux)", grid: "var(--color-line)", axis: "var(--color-slate-dim)",
+  lux: "oklch(0.858 0.132 88)",
+  luxDeep: "oklch(0.702 0.138 72)",
+  jade: "oklch(0.786 0.142 162)",
+  azure: "oklch(0.752 0.158 48)",
+  ruby: "oklch(0.652 0.222 27.5)",
+  violet: "oklch(0.7 0.135 348)",
+  amber: "oklch(0.828 0.168 66)",
+  grid: "oklch(0.372 0.028 52 / 0.5)",
+  axis: "oklch(0.668 0.027 70)",
 };
 
 export const CHART_PALETTE = [

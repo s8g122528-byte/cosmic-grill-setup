@@ -17,7 +17,6 @@ import {
   AlertCircle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/client";
 import { Panel } from "@/components/admin/bits";
 import { currentTenantSlug } from "@/lib/tenant";
@@ -40,16 +39,16 @@ type StaffMember = {
 };
 
 const ROLE_META: Record<string, { label: string; icon: React.ReactNode; color: string }> = {
-  kitchen:  { label: "Kitchen",  icon: <ChefHat className="w-4 h-4" />,    color: "text-amber-lux bg-amber-lux/10 border-amber-lux/20" },
-  cashier:  { label: "Cashier",  icon: <ShoppingBag className="w-4 h-4" />, color: "text-azure bg-azure/10 border-azure/20" },
-  manager:  { label: "Manager",  icon: <BadgeCheck className="w-4 h-4" />,  color: "text-lux bg-lux/10 border-lux/20" },
-  rider:    { label: "Rider",    icon: <Bike className="w-4 h-4" />,        color: "text-jade bg-jade/10 border-jade/20" },
-  admin:    { label: "Admin",    icon: <ShieldCheck className="w-4 h-4" />, color: "text-ruby bg-ruby/10 border-ruby/20" },
-  owner:    { label: "Owner",    icon: <ShieldCheck className="w-4 h-4" />, color: "text-amber-lux bg-amber-lux/10 border-amber-lux/20" },
+  kitchen:  { label: "Kitchen",  icon: <ChefHat className="w-4 h-4" />,    color: "text-orange-400 bg-orange-500/10 border-orange-500/20" },
+  cashier:  { label: "Cashier",  icon: <ShoppingBag className="w-4 h-4" />, color: "text-cyan-400 bg-cyan-500/10 border-cyan-500/20" },
+  manager:  { label: "Manager",  icon: <BadgeCheck className="w-4 h-4" />,  color: "text-purple-400 bg-purple-500/10 border-purple-500/20" },
+  rider:    { label: "Rider",    icon: <Bike className="w-4 h-4" />,        color: "text-emerald-400 bg-emerald-500/10 border-emerald-500/20" },
+  admin:    { label: "Admin",    icon: <ShieldCheck className="w-4 h-4" />, color: "text-red-400 bg-red-500/10 border-red-500/20" },
+  owner:    { label: "Owner",    icon: <ShieldCheck className="w-4 h-4" />, color: "text-amber-400 bg-amber-500/10 border-amber-500/20" },
 };
 
 function RoleBadge({ role }: { role: string }) {
-  const meta = ROLE_META[role] ?? { label: role, icon: null, color: "text-mist bg-ink border-line" };
+  const meta = ROLE_META[role] ?? { label: role, icon: null, color: "text-[#a09484] bg-[#2a2620] border-[#3a3020]" };
   return (
     <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold border ${meta.color}`}>
       {meta.icon}{meta.label}
@@ -129,89 +128,89 @@ function AdminStaffPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6">
+    <div className="p-6 max-w-5xl mx-auto space-y-8">
       {/* Header */}
-      <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <span className="p-2.5 rounded-xl bg-lux/10 border border-lux/20 text-lux">
+          <span className="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
             <Users className="w-6 h-6" />
           </span>
           <div>
-            <h1 className="text-2xl font-black text-frost">Staff Management</h1>
-            <p className="text-sm text-slate-dim">Cashiers, kitchen staff, managers aur riders create aur manage karein.</p>
+            <h1 className="text-2xl font-black text-white">Staff Management</h1>
+            <p className="text-sm text-[#7a6e5e]">Cashiers, kitchen staff, managers aur riders create aur manage karein.</p>
           </div>
         </div>
-        <Button variant="ghost"
+        <button
           onClick={() => setShowForm(!showForm)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-lux hover:bg-lux/90 text-console-on-primary font-bold text-sm transition-colors"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-sm transition-colors"
         >
           <UserPlus className="w-4 h-4" />
           Add Staff
-        </Button>
+        </button>
       </div>
 
       {/* Temp Password Banner — shown once after creation */}
       {newCred && (
-        <div className="bg-amber-lux/10 border border-amber-lux/30 rounded-2xl p-5">
+        <div className="bg-amber-500/10 border border-amber-500/30 rounded-2xl p-5">
           <div className="flex items-start gap-3">
-            <AlertCircle className="w-5 h-5 text-amber-lux shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-amber-400 shrink-0 mt-0.5" />
             <div className="flex-1">
-              <p className="text-sm font-bold text-amber-lux mb-2">
+              <p className="text-sm font-bold text-amber-300 mb-2">
                 ⚠️ Temporary Password — ek baar dikhaya jata hai!
               </p>
-              <div className="flex items-center gap-3 bg-panel rounded-xl px-4 py-3 border border-amber-lux/20">
+              <div className="flex items-center gap-3 bg-[#0e0d0b] rounded-xl px-4 py-3 border border-amber-500/20">
                 <div className="flex-1 font-mono text-sm">
-                  <span className="text-slate-dim">Username: </span>
-                  <span className="text-frost">{newCred.username}</span>
+                  <span className="text-[#7a6e5e]">Username: </span>
+                  <span className="text-white">{newCred.username}</span>
                   <br />
-                  <span className="text-slate-dim">Password: </span>
-                  <span className="text-amber-lux tracking-wider">
+                  <span className="text-[#7a6e5e]">Password: </span>
+                  <span className="text-amber-300 tracking-wider">
                     {showPass ? newCred.temp_password : "••••••••"}
                   </span>
                 </div>
-                <Button variant="ghost" onClick={() => setShowPass(!showPass)} className="text-slate-dim hover:text-frost">
+                <button onClick={() => setShowPass(!showPass)} className="text-[#7a6e5e] hover:text-white">
                   {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </Button>
-                <Button variant="ghost" onClick={copyPassword} className="text-slate-dim hover:text-amber-lux">
-                  {copied ? <Check className="w-4 h-4 text-jade" /> : <Copy className="w-4 h-4" />}
-                </Button>
+                </button>
+                <button onClick={copyPassword} className="text-[#7a6e5e] hover:text-amber-400">
+                  {copied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                </button>
               </div>
-              <p className="text-xs text-slate-dim mt-2">Staff member pehli login par password change karne par majboor hoga.</p>
+              <p className="text-xs text-[#7a6e5e] mt-2">Staff member pehli login par password change karne par majboor hoga.</p>
             </div>
-            <Button variant="ghost" onClick={() => setNewCred(null)} className="text-slate-dim hover:text-frost text-lg font-bold">&times;</Button>
+            <button onClick={() => setNewCred(null)} className="text-[#7a6e5e] hover:text-white text-lg font-bold">&times;</button>
           </div>
         </div>
       )}
 
       {/* Add Staff Form */}
       {showForm && (
-        <Panel>
-          <h2 className="text-base font-bold text-frost mb-5">New Staff Member</h2>
+        <Panel className="p-6">
+          <h2 className="text-base font-bold text-white mb-5">New Staff Member</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
             <div>
-              <label className="block text-xs font-bold text-slate-dim mb-1.5">Full Name</label>
+              <label className="block text-xs font-bold text-[#7a6e5e] mb-1.5">Full Name</label>
               <input
                 value={fullName}
                 onChange={e => setFullName(e.target.value)}
                 placeholder="e.g. Hamza Khan"
-                className="w-full bg-panel border border-line text-frost rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-lux/50"
+                className="w-full bg-[#0e0d0b] border border-[#2a2620] text-white rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-purple-500/50"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-dim mb-1.5">Phone (will be username)</label>
+              <label className="block text-xs font-bold text-[#7a6e5e] mb-1.5">Phone (will be username)</label>
               <input
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
                 placeholder="e.g. 03001234567"
-                className="w-full bg-panel border border-line text-frost rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-lux/50"
+                className="w-full bg-[#0e0d0b] border border-[#2a2620] text-white rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-purple-500/50"
               />
             </div>
             <div>
-              <label className="block text-xs font-bold text-slate-dim mb-1.5">Role</label>
+              <label className="block text-xs font-bold text-[#7a6e5e] mb-1.5">Role</label>
               <select
                 value={role}
                 onChange={e => setRole(e.target.value)}
-                className="w-full bg-panel border border-line text-frost rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-lux/50"
+                className="w-full bg-[#0e0d0b] border border-[#2a2620] text-white rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-purple-500/50"
               >
                 <option value="kitchen">Kitchen Staff</option>
                 <option value="cashier">Cashier</option>
@@ -221,20 +220,20 @@ function AdminStaffPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost"
+            <button
               onClick={handleCreate}
               disabled={submitting}
-              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-lux hover:bg-lux/90 text-console-on-primary font-bold text-sm transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-bold text-sm transition-colors disabled:opacity-50"
             >
               {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
               Create Account
-            </Button>
-            <Button variant="ghost"
+            </button>
+            <button
               onClick={() => setShowForm(false)}
-              className="px-4 py-2.5 rounded-xl text-slate-dim hover:text-frost border border-line text-sm transition-colors"
+              className="px-4 py-2.5 rounded-xl text-[#7a6e5e] hover:text-white border border-[#2e2a24] text-sm transition-colors"
             >
               Cancel
-            </Button>
+            </button>
           </div>
         </Panel>
       )}
@@ -242,12 +241,12 @@ function AdminStaffPage() {
       {/* Staff Table */}
       <Panel>
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-slate-dim gap-3">
-            <Loader2 className="w-5 h-5 animate-spin text-lux" />
+          <div className="flex items-center justify-center py-16 text-[#7a6e5e] gap-3">
+            <Loader2 className="w-5 h-5 animate-spin text-purple-400" />
             <span>Loading staff...</span>
           </div>
         ) : staff.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-slate-dim gap-3">
+          <div className="flex flex-col items-center justify-center py-16 text-[#7a6e5e] gap-3">
             <Users className="w-10 h-10 opacity-30" />
             <p className="text-sm">Koi staff member nahi mila. Upar se naiya staff add karein.</p>
           </div>
@@ -255,7 +254,7 @@ function AdminStaffPage() {
           <div className="overflow-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="border-b border-line text-slate-dim text-xs uppercase tracking-wider">
+                <tr className="border-b border-[#2e2a24] text-[#7a6e5e] text-xs uppercase tracking-wider">
                   <th className="text-left py-3 px-4">Name</th>
                   <th className="text-left py-3 px-4">Phone</th>
                   <th className="text-left py-3 px-4">Role</th>
@@ -266,25 +265,25 @@ function AdminStaffPage() {
               </thead>
               <tbody>
                 {staff.map(s => (
-                  <tr key={s.id} className="border-b border-line hover:bg-ink transition-colors">
-                    <td className="py-3 px-4 font-medium text-frost">{s.full_name || s.username}</td>
-                    <td className="py-3 px-4 font-mono text-mist">{s.phone || s.username}</td>
+                  <tr key={s.id} className="border-b border-[#1e1c18] hover:bg-[#1a1815]/50 transition-colors">
+                    <td className="py-3 px-4 font-medium text-white">{s.full_name || s.username}</td>
+                    <td className="py-3 px-4 font-mono text-[#a09484]">{s.phone || s.username}</td>
                     <td className="py-3 px-4"><RoleBadge role={s.role} /></td>
                     <td className="py-3 px-4">
-                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${s.is_active ? "text-jade bg-jade/10" : "text-ruby bg-ruby/10"}`}>
+                      <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold ${s.is_active ? "text-emerald-400 bg-emerald-500/10" : "text-red-400 bg-red-500/10"}`}>
                         {s.is_active ? "Active" : "Inactive"}
                       </span>
                     </td>
-                    <td className="py-3 px-4 text-slate-dim">{s.branch_name || "—"}</td>
+                    <td className="py-3 px-4 text-[#7a6e5e]">{s.branch_name || "—"}</td>
                     <td className="py-3 px-4 text-right">
                       {s.is_active && !["owner", "admin"].includes(s.role) && (
-                        <Button variant="ghost"
+                        <button
                           onClick={() => handleDeactivate(s.id, s.full_name)}
-                          className="p-1.5 rounded-lg text-slate-dim hover:text-ruby hover:bg-ruby/10 transition-colors"
+                          className="p-1.5 rounded-lg text-[#7a6e5e] hover:text-red-400 hover:bg-red-500/10 transition-colors"
                           title="Deactivate"
                         >
                           <Trash2 className="w-4 h-4" />
-                        </Button>
+                        </button>
                       )}
                     </td>
                   </tr>

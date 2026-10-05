@@ -17,7 +17,6 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { api } from "@/lib/api/client";
 import { invalidateMenuCache } from "@/lib/menu";
@@ -286,13 +285,13 @@ function DishesManagementPage() {
           </p>
         </div>
 
-        <Button variant="ghost"
+        <button
           type="button"
           onClick={() => openEditModal()}
-          className="admin-primary-action"
+          className="inline-flex items-center gap-2 rounded-full border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-5 py-2.5 text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_4px_20px_rgba(184,42,20,0.4)] transition hover:brightness-110 active:scale-95"
         >
           <Plus className="h-4 w-4" /> Add New Dish
-        </Button>
+        </button>
       </header>
 
       {/* Metric Tiles */}
@@ -314,9 +313,9 @@ function DishesManagementPage() {
             <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
               Available (In Stock)
             </span>
-            <span className="block font-hero num-lux text-2xl text-jade mt-0.5">{availableCount}</span>
+            <span className="block font-hero num-lux text-2xl text-emerald-400 mt-0.5">{availableCount}</span>
           </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-jade/10 text-jade border border-jade/20">
+          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
             <Check className="h-5 w-5" />
           </div>
         </Panel>
@@ -401,16 +400,19 @@ function DishesManagementPage() {
           </p>
         </Panel>
       ) : (
-        <div className="admin-dish-grid grid gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filteredDishes.map((dish) => (
             <motion.div
               key={dish.id}
               layout
-              data-available={dish.is_available}
-              className="admin-dish-card group relative overflow-hidden"
+              className={`group relative overflow-hidden rounded-3xl border transition-all ${
+                dish.is_available
+                  ? "border-lux/20 bg-gradient-to-b from-[#1C1A18] to-[#121110] shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:border-lux/50"
+                  : "border-white/10 bg-[#141211]/80 opacity-70"
+              }`}
             >
               {/* Dish Top Image & Badges */}
-              <div className="admin-dish-image relative w-full overflow-hidden">
+              <div className="relative h-44 w-full overflow-hidden bg-black/40">
                 {dish.image_url ? (
                   <img
                     src={dish.image_url}
@@ -419,33 +421,33 @@ function DishesManagementPage() {
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-ink text-mist">
+                  <div className="flex h-full w-full items-center justify-center bg-black/50 text-cream/20">
                     <UtensilsCrossed className="h-12 w-12" />
                   </div>
                 )}
-                
+                <div className="absolute inset-0 bg-gradient-to-t from-[#141211] via-transparent to-black/40" />
 
                 {/* Badges */}
-                <div className="admin-dish-badges absolute top-3 left-3 flex flex-wrap gap-1.5">
-                  <span className="admin-dish-badge rounded-md px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
+                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
+                  <span className="rounded-full border border-lux/40 bg-black/70 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
                     {dish.category_name || "Mains"}
                   </span>
                   {dish.is_featured && (
-                    <span className="flex items-center gap-1 rounded-full border border-amber-lux/30 bg-panel px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
+                    <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
                       <Sparkles className="h-3 w-3" /> Special
                     </span>
                   )}
                 </div>
 
                 {/* Quick Availability Badge */}
-                <div className="admin-dish-stock">
-                  <Button variant="ghost"
+                <div className="absolute top-3 right-3">
+                  <button
                     type="button"
                     onClick={() => toggleAvailability(dish)}
                     title={dish.is_available ? "Click to mark as Sold Out" : "Click to mark as Available"}
                     className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider shadow-lg backdrop-blur-md transition ${
                       dish.is_available
-                        ? "border border-jade/40 bg-jade/20 text-jade hover:bg-jade/30"
+                        ? "border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
                         : "border border-ruby/50 bg-ruby/30 text-ruby hover:bg-ruby/40"
                     }`}
                   >
@@ -458,7 +460,7 @@ function DishesManagementPage() {
                         <EyeOff className="h-3 w-3" /> Sold Out
                       </>
                     )}
-                  </Button>
+                  </button>
                 </div>
               </div>
 
@@ -476,7 +478,7 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Heat & Time attributes */}
-                <div className="flex items-center gap-3 text-[11px] text-mist">
+                <div className="flex items-center gap-3 text-[11px] text-cream/60">
                   <span className="flex items-center gap-1">
                     <Flame className="h-3.5 w-3.5 text-flame" /> {dish.heat_level}
                   </span>
@@ -486,7 +488,7 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Sizing & Pricing breakdown */}
-                <div className="admin-dish-price border border-line bg-ink p-2.5">
+                <div className="rounded-2xl border border-white/10 bg-black/30 p-2.5">
                   <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
                       Base Price
@@ -496,11 +498,11 @@ function DishesManagementPage() {
                     </span>
                   </div>
                   {dish.sizes && dish.sizes.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1 border-t border-line pt-1.5">
+                    <div className="mt-2 flex flex-wrap gap-1 border-t border-white/10 pt-1.5">
                       {dish.sizes.map((s, idx) => (
                         <span
                           key={idx}
-                          className="rounded-lg bg-ink px-2 py-0.5 text-[10px] font-mono text-mist"
+                          className="rounded-lg bg-white/5 px-2 py-0.5 text-[10px] font-mono text-cream/70"
                         >
                           {s.size}: <strong className="text-lux">Rs {s.price}</strong>
                         </span>
@@ -510,32 +512,32 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="admin-dish-actions flex items-center justify-between pt-1 border-t border-line">
-                  <Button variant="ghost"
+                <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                  <button
                     type="button"
                     onClick={() => toggleAvailability(dish)}
                     className="text-[11px] font-black uppercase tracking-wider text-slate-dim hover:text-lux transition"
                   >
                     {dish.is_available ? "Set Sold Out" : "Set Available"}
-                  </Button>
+                  </button>
 
                   <div className="flex items-center gap-1">
-                    <Button variant="ghost"
+                    <button
                       type="button"
                       onClick={() => openEditModal(dish)}
                       className="rounded-xl border border-lux/20 p-2 text-lux hover:bg-lux/10 transition"
                       title="Edit dish"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button variant="ghost"
+                    </button>
+                    <button
                       type="button"
                       onClick={() => handleArchiveDish(dish)}
                       className="rounded-xl border border-ruby/30 p-2 text-ruby hover:bg-ruby/10 transition"
                       title="Archive dish"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -553,16 +555,16 @@ function DishesManagementPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setModalOpen(false)}
-              className="fixed inset-0 admin-modal-overlay"
+              className="fixed inset-0 bg-black/80 backdrop-blur-md"
             />
 
             <motion.div
               initial={{ scale: 0.95, opacity: 0, y: 15 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 15 }}
-              className="admin-modal relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto p-6"
+              className="relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-lux/30 bg-[#161413] p-6 text-cream shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
             >
-              <div className="flex items-center justify-between border-b border-line pb-3">
+              <div className="flex items-center justify-between border-b border-white/10 pb-3">
                 <div className="flex items-center gap-2.5">
                   <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-lux/20 text-lux border border-lux/30">
                     <UtensilsCrossed className="h-5 w-5" />
@@ -571,18 +573,18 @@ function DishesManagementPage() {
                     <h2 className="font-hero text-lg font-bold text-lux">
                       {editingDish ? `Edit: ${editingDish.name}` : "Add New Dish"}
                     </h2>
-                    <p className="text-xs text-mist">
+                    <p className="text-xs text-cream/60">
                       Configure dish pricing, availability, and description.
                     </p>
                   </div>
                 </div>
-                <Button variant="ghost"
+                <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="rounded-full p-1.5 text-mist hover:bg-ink hover:text-frost"
+                  className="rounded-full p-1.5 text-cream/50 hover:bg-white/10 hover:text-cream"
                 >
                   <X className="h-5 w-5" />
-                </Button>
+                </button>
               </div>
 
               <form onSubmit={handleSaveDish} className="mt-5 space-y-4">
@@ -597,7 +599,7 @@ function DishesManagementPage() {
                       value={formName}
                       onChange={(e) => setFormName(e.target.value)}
                       placeholder="e.g. Mutton Shinwari Karahi"
-                      className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
 
@@ -608,7 +610,7 @@ function DishesManagementPage() {
                     <select
                       value={formCategory}
                       onChange={(e) => setFormCategory(Number(e.target.value) || "")}
-                      className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     >
                       <option value="">Select Category</option>
                       {categories.map((c) => (
@@ -630,7 +632,7 @@ function DishesManagementPage() {
                       min={0}
                       value={formPrice}
                       onChange={(e) => setFormPrice(Number(e.target.value) || 0)}
-                      className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
 
@@ -641,7 +643,7 @@ function DishesManagementPage() {
                     <select
                       value={formHeat}
                       onChange={(e) => setFormHeat(e.target.value)}
-                      className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     >
                       <option value="Mild">Mild</option>
                       <option value="Medium">Medium</option>
@@ -660,7 +662,7 @@ function DishesManagementPage() {
                       max={120}
                       value={formPrepTime}
                       onChange={(e) => setFormPrepTime(Number(e.target.value) || 25)}
-                      className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                     />
                   </div>
                 </div>
@@ -674,7 +676,7 @@ function DishesManagementPage() {
                     value={formImage}
                     onChange={(e) => setFormImage(e.target.value)}
                     placeholder="https://images.unsplash.com/..."
-                    className="w-full rounded-xl border border-line bg-ink py-2 px-3 text-xs text-frost focus:border-lux focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
                   />
                 </div>
 
@@ -687,7 +689,7 @@ function DishesManagementPage() {
                     value={formDesc}
                     onChange={(e) => setFormDesc(e.target.value)}
                     placeholder="Authentic charcoal-cooked karahi with black pepper and fresh green chilies."
-                    className="w-full rounded-xl border border-line bg-ink p-2.5 text-xs text-frost focus:border-lux focus:outline-none"
+                    className="w-full rounded-xl border border-white/10 bg-black/40 p-2.5 text-xs text-cream focus:border-lux focus:outline-none"
                   />
                 </div>
 
@@ -699,7 +701,7 @@ function DishesManagementPage() {
                       onChange={(e) => setFormAvailable(e.target.checked)}
                       className="h-4 w-4 rounded border-lux text-flame focus:ring-lux"
                     />
-                    <span className="text-xs font-bold text-frost">Available (In Stock)</span>
+                    <span className="text-xs font-bold text-cream">Available (In Stock)</span>
                   </label>
 
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -713,22 +715,22 @@ function DishesManagementPage() {
                   </label>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-line">
-                  <Button variant="ghost"
+                <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                  <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="rounded-xl border border-line px-4 py-2 font-display text-xs font-black uppercase tracking-wider text-mist hover:bg-ink"
+                    className="rounded-xl border border-white/20 px-4 py-2 font-display text-xs font-black uppercase tracking-wider text-cream/70 hover:bg-white/10"
                   >
                     Cancel
-                  </Button>
-                  <Button variant="ghost"
+                  </button>
+                  <button
                     type="submit"
                     disabled={saving}
-                    className="admin-primary-action"
+                    className="flex items-center gap-1.5 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-5 py-2 font-display text-xs font-black uppercase tracking-wider text-cream shadow-sm hover:brightness-110 active:scale-95 disabled:opacity-50"
                   >
                     {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                     {saving ? "Saving…" : "Save Dish"}
-                  </Button>
+                  </button>
                 </div>
               </form>
             </motion.div>
