@@ -59,10 +59,10 @@ export const Route = createFileRoute("/admin/riders")({
 });
 
 const tooltipStyle = {
-  background: "oklch(0.22 0.02 40)",
-  border: "1px solid oklch(0.85 0.15 88 / 0.3)",
+  background: "var(--color-panel)",
+  border: "1px solid var(--color-line)",
   borderRadius: 14,
-  color: "oklch(0.947 0.041 87.5)",
+  color: "var(--color-frost)",
   fontSize: 12,
   fontWeight: 700,
 };
@@ -308,9 +308,9 @@ function Riders() {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chart} margin={{ left: -18, right: 8 }}>
-                <CartesianGrid stroke="oklch(0.947 0.041 87.5 / 0.08)" vertical={false} />
-                <XAxis dataKey="name" tick={{ fill: "oklch(0.947 0.041 87.5 / 0.5)", fontSize: 11 }} tickLine={false} axisLine={false} />
-                <YAxis tick={{ fill: "oklch(0.947 0.041 87.5 / 0.45)", fontSize: 11 }} tickLine={false} axisLine={false} />
+                <CartesianGrid stroke="var(--color-line)" vertical={false} />
+                <XAxis dataKey="name" tick={{ fill: "var(--color-slate-dim)", fontSize: 11 }} tickLine={false} axisLine={false} />
+                <YAxis tick={{ fill: "var(--color-slate-dim)", fontSize: 11 }} tickLine={false} axisLine={false} />
                 <Tooltip contentStyle={tooltipStyle} />
                 <Bar dataKey="delivered" fill="var(--color-lux)" radius={[8, 8, 0, 0]} />
                 <Bar dataKey="active" fill="var(--color-jade)" radius={[8, 8, 0, 0]} />
@@ -335,7 +335,7 @@ function Riders() {
                 endAngle={-270}
               >
                 <PolarAngleAxis type="number" domain={[0, 100]} tick={false} />
-                <RadialBar dataKey="value" cornerRadius={20} fill="var(--color-lux)" background={{ fill: "oklch(0.947 0.041 87.5 / 0.08)" }} />
+                <RadialBar dataKey="value" cornerRadius={20} fill="var(--color-lux)" background={{ fill: "var(--color-line)" }} />
               </RadialBarChart>
             </ResponsiveContainer>
           </div>
@@ -360,7 +360,7 @@ function Riders() {
             <Field label="Email">
               <input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={fieldClass} />
             </Field>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-4">
               <Field label="Bike">
                 <input value={form.bike} onChange={(e) => setForm({ ...form, bike: e.target.value })} className={fieldClass} />
               </Field>
@@ -368,7 +368,7 @@ function Riders() {
                 <input value={form.plate} onChange={(e) => setForm({ ...form, plate: e.target.value })} className={fieldClass} />
               </Field>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-2 gap-4">
               <Field label="CNIC">
                 <input value={form.cnic} onChange={(e) => setForm({ ...form, cnic: e.target.value })} className={fieldClass} />
               </Field>
