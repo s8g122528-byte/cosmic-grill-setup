@@ -36,7 +36,7 @@ describe("Compact checkout phone verification", () => {
 
   it("keeps both delivery methods available without duplicating resend controls", async () => {
     render(<LuxuryOtpWidget phone="03001234567" isVerified={false} onVerified={vi.fn()} />);
-    fireEvent.click(await screen.findByRole("button", { name: "SMS", exact: true }));
+    fireEvent.click(await screen.findByRole("button", { name: "SMS" }));
     fireEvent.click(screen.getByRole("button", { name: "Send code" }));
     await waitFor(() => expect(requests.send).toHaveBeenCalledWith(expect.any(String), "sms"));
     expect(await screen.findByRole("button", { name: "Resend code" })).toBeInTheDocument();
