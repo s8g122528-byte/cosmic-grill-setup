@@ -604,148 +604,186 @@ function DishesManagementPage() {
               </div>
 
               <form onSubmit={handleSaveDish} className="mt-5 space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                      Dish Name *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formName}
-                      onChange={(e) => setFormName(e.target.value)}
-                      placeholder="e.g. Mutton Shinwari Karahi"
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
+                {/* Section: Dish identity */}
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <UtensilsCrossed className="h-3.5 w-3.5 text-lux" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-lux">
+                      Dish Identity
+                    </span>
                   </div>
+                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Dish Name *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formName}
+                        onChange={(e) => setFormName(e.target.value)}
+                        placeholder="e.g. Mutton Shinwari Karahi"
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      />
+                    </div>
 
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                      Category
-                    </label>
-                    <select
-                      value={formCategory}
-                      onChange={(e) => setFormCategory(Number(e.target.value) || "")}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    >
-                      <option value="">Select Category</option>
-                      {categories.map((c) => (
-                        <option key={c.id} value={c.id}>
-                          {c.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-3 gap-3">
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                      Base Price (PKR)
-                    </label>
-                    <input
-                      type="number"
-                      min={0}
-                      value={formPrice}
-                      onChange={(e) => setFormPrice(Number(e.target.value) || 0)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                      Heat Level
-                    </label>
-                    <select
-                      value={formHeat}
-                      onChange={(e) => setFormHeat(e.target.value)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    >
-                      <option value="Mild">Mild</option>
-                      <option value="Medium">Medium</option>
-                      <option value="Hot">Hot</option>
-                      <option value="Extra Hot">Extra Hot</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                      Prep Time (min)
-                    </label>
-                    <input
-                      type="number"
-                      min={5}
-                      max={120}
-                      value={formPrepTime}
-                      onChange={(e) => setFormPrepTime(Number(e.target.value) || 25)}
-                      className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                    />
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Category
+                      </label>
+                      <select
+                        value={formCategory}
+                        onChange={(e) => setFormCategory(Number(e.target.value) || "")}
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none"
+                      >
+                        <option value="">Select Category</option>
+                        {categories.map((c) => (
+                          <option key={c.id} value={c.id}>
+                            {c.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                    Image URL
-                  </label>
-                  <input
-                    type="url"
-                    value={formImage}
-                    onChange={(e) => setFormImage(e.target.value)}
-                    placeholder="https://images.unsplash.com/..."
-                    className="w-full rounded-xl border border-white/10 bg-black/40 py-2 px-3 text-xs text-cream focus:border-lux focus:outline-none"
-                  />
+                {/* Section: Pricing & Kitchen */}
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Flame className="h-3.5 w-3.5 text-flame" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-lux">
+                      Pricing &amp; Kitchen
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Base Price (PKR)
+                      </label>
+                      <input
+                        type="number"
+                        min={0}
+                        value={formPrice}
+                        onChange={(e) => setFormPrice(Number(e.target.value) || 0)}
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Heat Level
+                      </label>
+                      <select
+                        value={formHeat}
+                        onChange={(e) => setFormHeat(e.target.value)}
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none"
+                      >
+                        <option value="Mild">Mild</option>
+                        <option value="Medium">Medium</option>
+                        <option value="Hot">Hot</option>
+                        <option value="Extra Hot">Extra Hot</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Prep Time (min)
+                      </label>
+                      <input
+                        type="number"
+                        min={5}
+                        max={120}
+                        value={formPrepTime}
+                        onChange={(e) => setFormPrepTime(Number(e.target.value) || 25)}
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream focus:border-lux focus:outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="block text-[11px] font-black uppercase tracking-[0.14em] text-lux mb-1">
-                    Description
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formDesc}
-                    onChange={(e) => setFormDesc(e.target.value)}
-                    placeholder="Authentic charcoal-cooked karahi with black pepper and fresh green chilies."
-                    className="w-full rounded-xl border border-white/10 bg-black/40 p-2.5 text-xs text-cream focus:border-lux focus:outline-none"
-                  />
+                {/* Section: Presentation */}
+                <div className="rounded-2xl border border-white/10 bg-black/25 p-4">
+                  <div className="mb-3 flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-lux" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em] text-lux">
+                      Presentation
+                    </span>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Image URL
+                      </label>
+                      <input
+                        type="url"
+                        value={formImage}
+                        onChange={(e) => setFormImage(e.target.value)}
+                        placeholder="https://images.unsplash.com/..."
+                        className="w-full rounded-xl border border-white/10 bg-black/40 px-3 py-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="mb-1 block text-[10px] font-bold uppercase tracking-[0.14em] text-cream/60">
+                        Description
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={formDesc}
+                        onChange={(e) => setFormDesc(e.target.value)}
+                        placeholder="Authentic charcoal-cooked karahi with black pepper and fresh green chilies."
+                        className="w-full rounded-xl border border-white/10 bg-black/40 p-2.5 text-xs text-cream placeholder:text-cream/30 focus:border-lux focus:outline-none"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div className="flex items-center gap-6 pt-1">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formAvailable}
-                      onChange={(e) => setFormAvailable(e.target.checked)}
-                      className="h-4 w-4 rounded border-lux text-flame focus:ring-lux"
-                    />
-                    <span className="text-xs font-bold text-cream">Available (In Stock)</span>
-                  </label>
+                {/* Availability switches */}
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setFormAvailable(!formAvailable)}
+                    className={`inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition active:scale-95 ${
+                      formAvailable
+                        ? "border-emerald-500/40 bg-emerald-500/15 text-emerald-300"
+                        : "border-white/10 bg-black/40 text-cream/50 hover:border-white/20"
+                    }`}
+                  >
+                    <span className={`relative h-3.5 w-6 rounded-full transition-colors ${formAvailable ? "bg-emerald-500/70" : "bg-white/15"}`}>
+                      <span className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-cream shadow transition-all ${formAvailable ? "left-3" : "left-0.5"}`} />
+                    </span>
+                    {formAvailable ? "Available · In Stock" : "Sold Out"}
+                  </button>
 
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formFeatured}
-                      onChange={(e) => setFormFeatured(e.target.checked)}
-                      className="h-4 w-4 rounded border-lux text-flame focus:ring-lux"
-                    />
-                    <span className="text-xs font-bold text-lux">Chef Special / Featured</span>
-                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setFormFeatured(!formFeatured)}
+                    className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition active:scale-95 ${
+                      formFeatured
+                        ? "border-lux/50 bg-lux/15 text-lux"
+                        : "border-white/10 bg-black/40 text-cream/50 hover:border-lux/30"
+                    }`}
+                  >
+                    <Sparkles className="h-3.5 w-3.5" />
+                    {formFeatured ? "Chef Special · Featured" : "Mark as Chef Special"}
+                  </button>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/10">
+                <div className="flex items-center justify-end gap-2 border-t border-white/10 pt-4">
                   <button
                     type="button"
                     onClick={() => setModalOpen(false)}
-                    className="rounded-xl border border-white/20 px-4 py-2 font-display text-xs font-black uppercase tracking-wider text-cream/70 hover:bg-white/10"
+                    className="rounded-xl border border-white/20 px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-cream/70 transition hover:bg-white/10 active:scale-95"
                   >
                     Cancel
                   </button>
                   <button
                     type="submit"
                     disabled={saving}
-                    className="flex items-center gap-1.5 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-5 py-2 font-display text-xs font-black uppercase tracking-wider text-cream shadow-sm hover:brightness-110 active:scale-95 disabled:opacity-50"
+                    className="flex items-center gap-1.5 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_8px_24px_rgba(184,42,20,0.4)] transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                   >
                     {saving && <Loader2 className="h-4 w-4 animate-spin" />}
-                    {saving ? "Saving…" : "Save Dish"}
+                    {saving ? "Saving…" : editingDish ? "Save Changes" : "Create Dish"}
                   </button>
                 </div>
               </form>
