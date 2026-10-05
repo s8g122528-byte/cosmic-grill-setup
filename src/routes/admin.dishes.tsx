@@ -17,7 +17,7 @@ import {
   AlertTriangle,
 } from "lucide-react";
 import { toast } from "sonner";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { api } from "@/lib/api/client";
 import { invalidateMenuCache } from "@/lib/menu";
 import { Field, LuxSearch, Panel, fieldClass } from "@/components/admin/bits";
@@ -50,7 +50,32 @@ interface DishItem {
   sizes?: DishSize[];
 }
 
+/** Counts metric values up on mount for the dashboard-style tiles. */
+function CountUp({ value }: { value: number }) {
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setN(value);
+      return;
+    }
+    let raf = 0;
+    const start = performance.now();
+    const duration = 750;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / duration);
+      setN(Math.round(value * (1 - Math.pow(1 - p, 3))));
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [value]);
+
+  return <>{n}</>;
+}
+
 function DishesManagementPage() {
+  const reduce = useReducedMotion();
   const [dishes, setDishes] = useState<DishItem[]>([]);
   const [categories, setCategories] = useState<{ id: number; name: string; slug: string }[]>([]);
   const [loading, setLoading] = useState(true);
@@ -296,53 +321,41 @@ function DishesManagementPage() {
 
       {/* Metric Tiles */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Panel bodyClassName="p-4 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
-              Total Dishes
-            </span>
-            <span className="block font-hero num-lux text-2xl text-frost mt-0.5">{totalCount}</span>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-lux/10 text-lux border border-lux/20">
-            <UtensilsCrossed className="h-5 w-5" />
-          </div>
-        </Panel>
-
-        <Panel bodyClassName="p-4 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
-              Available (In Stock)
-            </span>
-            <span className="block font-hero num-lux text-2xl text-emerald-400 mt-0.5">{availableCount}</span>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-            <Check className="h-5 w-5" />
-          </div>
-        </Panel>
-
-        <Panel bodyClassName="p-4 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
-              Sold Out (Off Menu)
-            </span>
-            <span className="block font-hero num-lux text-2xl text-ruby mt-0.5">{soldOutCount}</span>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-ruby/10 text-ruby border border-ruby/20">
-            <EyeOff className="h-5 w-5" />
-          </div>
-        </Panel>
-
-        <Panel bodyClassName="p-4 flex items-center justify-between">
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
-              Chef Specials
-            </span>
-            <span className="block font-hero num-lux text-2xl text-lux mt-0.5">{featuredCount}</span>
-          </div>
-          <div className="flex h-10 w-10 items-center justify-center rounded-2xl bg-lux/10 text-lux border border-lux/20">
-            <Sparkles className="h-5 w-5" />
-          </div>
-        </Panel>
+        {(
+          [
+            { label: "Total Dishes", value: totalCount, icon: UtensilsCrossed, cls: "text-lux", chip: "bg-lux/10 text-lux border-lux/25", ruby: false },
+            { label: "Available (In Stock)", value: availableCount, icon: Check, cls: "text-emerald-400", chip: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25", ruby: false },
+            { label: "Sold Out (Off Menu)", value: soldOutCount, icon: EyeOff, cls: "text-ruby", chip: "bg-ruby/10 text-ruby border-ruby/25", ruby: true },
+            { label: "Chef Specials", value: featuredCount, icon: Sparkles, cls: "text-lux", chip: "bg-lux/10 text-lux border-lux/25", ruby: false },
+          ] as const
+        ).map((t, i) => (
+          <motion.div
+            key={t.label}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.45, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
+            whileHover={reduce ? undefined : { y: -3 }}
+            className={`relative overflow-hidden rounded-2xl border p-4 shadow-[0_8px_28px_rgba(0,0,0,0.35)] ${
+              t.ruby
+                ? "border-ruby/25 bg-gradient-to-br from-[#1C1416] to-[#141110]"
+                : "border-lux/20 bg-gradient-to-br from-[#1C1A18] to-[#121110]"
+            }`}
+          >
+            <div className="flex items-start justify-between gap-2">
+              <div className="min-w-0">
+                <span className="block truncate text-[10px] font-black uppercase tracking-[0.16em] text-slate-dim">
+                  {t.label}
+                </span>
+                <span className={`mt-1 block font-hero num-lux text-3xl font-black leading-none ${t.cls}`}>
+                  <CountUp value={t.value} />
+                </span>
+              </div>
+              <div className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border ${t.chip}`}>
+                <t.icon className="h-4 w-4" />
+              </div>
+            </div>
+          </motion.div>
+        ))}
       </div>
 
       {/* Filter / Search Bar */}
@@ -401,13 +414,18 @@ function DishesManagementPage() {
         </Panel>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredDishes.map((dish) => (
-            <motion.div
+          {filteredDishes.map((dish, i) => (
+            <motion.article
               key={dish.id}
               layout
-              className={`group relative overflow-hidden rounded-3xl border transition-all ${
+              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.15 }}
+              transition={{ duration: 0.45, delay: (i % 3) * 0.06, ease: [0.22, 1, 0.36, 1] }}
+              whileHover={reduce ? undefined : { y: -4 }}
+              className={`group relative flex flex-col overflow-hidden rounded-3xl border transition-colors ${
                 dish.is_available
-                  ? "border-lux/20 bg-gradient-to-b from-[#1C1A18] to-[#121110] shadow-[0_8px_32px_rgba(0,0,0,0.3)] hover:border-lux/50"
+                  ? "border-lux/20 bg-gradient-to-b from-[#1C1A18] to-[#121110] shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-lux/50"
                   : "border-white/10 bg-[#141211]/80 opacity-70"
               }`}
             >
@@ -465,40 +483,38 @@ function DishesManagementPage() {
               </div>
 
               {/* Body */}
-              <div className="p-4 space-y-3">
-                <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <h3 className="font-hero text-lg font-bold text-frost group-hover:text-lux transition">
-                      {dish.name}
-                    </h3>
-                    <p className="line-clamp-2 text-xs text-slate-dim mt-0.5">
-                      {dish.description || "Authentic specialty cooked over charcoal flame."}
-                    </p>
-                  </div>
+              <div className="flex flex-1 flex-col gap-3 p-4">
+                <div>
+                  <h3 className="font-hero text-lg font-bold leading-snug text-frost transition group-hover:text-lux">
+                    {dish.name}
+                  </h3>
+                  <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-dim">
+                    {dish.description || "Authentic specialty cooked over charcoal flame."}
+                  </p>
                 </div>
 
-                {/* Heat & Time attributes */}
-                <div className="flex items-center gap-3 text-[11px] text-cream/60">
-                  <span className="flex items-center gap-1">
-                    <Flame className="h-3.5 w-3.5 text-flame" /> {dish.heat_level}
+                {/* Heat & Time attribute chips */}
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-flame/30 bg-flame/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-flame">
+                    <Flame className="h-3 w-3" /> {dish.heat_level}
                   </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5 text-lux" /> {dish.prep_time_minutes} min
+                  <span className="inline-flex items-center gap-1.5 rounded-full border border-lux/25 bg-lux/10 px-2.5 py-1 text-[10px] font-black uppercase tracking-wider text-lux">
+                    <Clock className="h-3 w-3" /> {dish.prep_time_minutes} min
                   </span>
                 </div>
 
                 {/* Sizing & Pricing breakdown */}
-                <div className="rounded-2xl border border-white/10 bg-black/30 p-2.5">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-black uppercase tracking-wider text-slate-dim">
+                <div className="mt-auto rounded-2xl border border-white/10 bg-black/30 p-3">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-dim">
                       Base Price
                     </span>
-                    <span className="font-hero num-lux text-lg text-lux font-black">
+                    <span className="font-hero num-lux text-lg font-black text-lux">
                       Rs {dish.price}
                     </span>
                   </div>
                   {dish.sizes && dish.sizes.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-1 border-t border-white/10 pt-1.5">
+                    <div className="mt-2 flex flex-wrap gap-1 border-t border-white/10 pt-2">
                       {dish.sizes.map((s, idx) => (
                         <span
                           key={idx}
@@ -512,20 +528,20 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="flex items-center justify-between pt-1 border-t border-white/10">
+                <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-3">
                   <button
                     type="button"
                     onClick={() => toggleAvailability(dish)}
-                    className="text-[11px] font-black uppercase tracking-wider text-slate-dim hover:text-lux transition"
+                    className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-cream/70 transition hover:border-lux/40 hover:text-lux active:scale-95"
                   >
                     {dish.is_available ? "Set Sold Out" : "Set Available"}
                   </button>
 
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
                       type="button"
                       onClick={() => openEditModal(dish)}
-                      className="rounded-xl border border-lux/20 p-2 text-lux hover:bg-lux/10 transition"
+                      className="rounded-xl border border-lux/25 bg-lux/5 p-2 text-lux transition hover:bg-lux/15 active:scale-90"
                       title="Edit dish"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
@@ -533,7 +549,7 @@ function DishesManagementPage() {
                     <button
                       type="button"
                       onClick={() => handleArchiveDish(dish)}
-                      className="rounded-xl border border-ruby/30 p-2 text-ruby hover:bg-ruby/10 transition"
+                      className="rounded-xl border border-ruby/30 bg-ruby/5 p-2 text-ruby transition hover:bg-ruby/15 active:scale-90"
                       title="Archive dish"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
@@ -541,7 +557,7 @@ function DishesManagementPage() {
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </motion.article>
           ))}
         </div>
       )}
