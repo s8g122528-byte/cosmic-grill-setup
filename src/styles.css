@@ -22,7 +22,7 @@
 .foodio-menu__eyebrow { display: inline-block; margin-bottom: .5rem; color: var(--color-flame-dark); font: 800 .75rem/1 var(--font-menu-body); text-transform: uppercase; letter-spacing: .14em; }
 .foodio-menu__heading h2 { font: 400 3.75rem/1.2 var(--font-menu-heading); color: var(--color-flame); letter-spacing: 0; text-shadow: 0 3px 0 var(--color-cream-deep); }
 .foodio-menu__heading::after { content: ""; position: absolute; left: 50%; bottom: -1rem; transform: translateX(-50%); width: 110px; height: 6px; border-radius: 1.5rem; background: var(--color-charcoal); }
-.foodio-menu__grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; align-items: start; }
+.foodio-menu__grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; align-items: stretch; }
 .foodio-menu__item { position: relative; min-width: 0; background: var(--color-menu-card); border-radius: 1.5rem; margin-left: 5.25rem; padding: 3.25rem 1.5rem 3.25rem 7.5rem; }
 .foodio-menu__image { position: absolute; top: 50%; transform: translateY(-50%); left: -5.25rem; width: 210px; height: 190px; }
 .foodio-menu__image::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 70%; height: 115%; border-radius: 5.5rem; background: var(--color-menu-accent); }
