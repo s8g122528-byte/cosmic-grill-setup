@@ -3,6 +3,8 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { LuxuryOtpWidget } from "@/components/kennedy/LuxuryOtpWidget";
 
+vi.stubGlobal("ResizeObserver", class { observe() {} unobserve() {} disconnect() {} });
+
 const requests = vi.hoisted(() => ({
   send: vi.fn().mockResolvedValue({ channel: "whatsapp", sent_via_whatsapp: true }),
   verify: vi.fn().mockResolvedValue({ account: { name: "Customer" } }),
