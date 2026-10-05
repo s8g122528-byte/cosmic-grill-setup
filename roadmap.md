@@ -1,5 +1,5 @@
 # Menu reference update
-- [ ] Refresh admin navigation, scoped theme, dish cards, payments and form spacing; validate presentation without changing access or order behavior.
+- [x] Refresh admin navigation, scoped theme, dish cards, payments and form spacing without changing access or order behavior. Sample-content desktop and phone layouts show no page overflow; three presentation tests pass. Signed-in live screens remain unverified.
 - [x] Refresh cart layout, reference-style payment selector, compact OTP and verified phone lock. Verified real menu-to-cart navigation and all payment choices; mocked OTP send/verify tests pass. No real OTP or order was sent.
 - [x] Generate five transparent, consistently sized menu food images.
 - [x] Apply images only within the menu and add reduced-motion-safe image animation.
