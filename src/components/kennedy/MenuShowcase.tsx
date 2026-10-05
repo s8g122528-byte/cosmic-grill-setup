@@ -2,7 +2,7 @@ import { memo, useCallback, useEffect, useMemo, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Check, ShoppingBag, Star, Utensils, ChefHat, Eye } from "lucide-react";
+import { ShoppingBag, Star, Eye } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -196,7 +196,6 @@ export function MenuShowcase() {
         <nav className="foodio-menu__filters" aria-label="Menu categories">
           {[{ name: ALL, count: dishes.length }, ...categories].map((category) => {
             const selected = active === category.name;
-            const Icon = category.name === ALL ? Utensils : ChefHat;
             return (
               <Button
                 key={category.name}
@@ -206,10 +205,15 @@ export function MenuShowcase() {
                 onClick={() => setActive(category.name)}
                 className={`foodio-menu__filter ${selected ? "foodio-menu__filter--active" : ""}`}
               >
-                <Icon aria-hidden="true" />
+                {selected && (
+                  <motion.span
+                    layoutId="menu-filter-pill"
+                    className="foodio-menu__pill"
+                    transition={{ type: "spring", stiffness: 420, damping: 34 }}
+                  />
+                )}
                 <span>{category.name === ALL ? "All" : category.name}</span>
                 <span className="foodio-menu__count">{category.count}</span>
-                {selected && <Check className="foodio-menu__check" aria-hidden="true" />}
               </Button>
             );
           })}
@@ -219,7 +223,13 @@ export function MenuShowcase() {
           {isLoading ? (
             <MenuSkeleton />
           ) : (
-            <div className="foodio-menu__grid">
+            <motion.div
+              key={active}
+              initial={reduce ? false : { opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              className="foodio-menu__grid"
+            >
               {visible.map((dish, index) => (
                 <CompactMenuItem
                   key={dish.slug}
@@ -229,7 +239,7 @@ export function MenuShowcase() {
                   onAdd={handleAdd}
                 />
               ))}
-            </div>
+            </motion.div>
           )}
         </div>
       </div>

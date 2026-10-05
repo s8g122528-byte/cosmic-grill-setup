@@ -22,7 +22,7 @@
 .foodio-menu__eyebrow { display: inline-block; margin-bottom: .5rem; color: var(--color-flame-dark); font: 800 .75rem/1 var(--font-menu-body); text-transform: uppercase; letter-spacing: .14em; }
 .foodio-menu__heading h2 { font: 400 3.75rem/1.2 var(--font-menu-heading); color: var(--color-flame); letter-spacing: 0; text-shadow: 0 3px 0 var(--color-cream-deep); }
 .foodio-menu__heading::after { content: ""; position: absolute; left: 50%; bottom: -1rem; transform: translateX(-50%); width: 110px; height: 6px; border-radius: 1.5rem; background: var(--color-charcoal); }
-.foodio-menu__grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; align-items: start; }
+.foodio-menu__grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 1.5rem; align-items: stretch; }
 .foodio-menu__item { position: relative; min-width: 0; background: var(--color-menu-card); border-radius: 1.5rem; margin-left: 5.25rem; padding: 3.25rem 1.5rem 3.25rem 7.5rem; }
 .foodio-menu__image { position: absolute; top: 50%; transform: translateY(-50%); left: -5.25rem; width: 210px; height: 190px; }
 .foodio-menu__image::before { content: ""; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 70%; height: 115%; border-radius: 5.5rem; background: var(--color-menu-accent); }
@@ -32,21 +32,20 @@
 .foodio-menu__price { display: block; margin-block: 1rem .75rem; color: var(--color-menu-accent); font: 400 1.75rem/1.2 var(--font-menu-heading); }
 .foodio-menu__rating { display: flex; gap: .375rem; color: var(--color-ember); }
 .foodio-menu__rating svg { width: 1.125rem; height: 1.125rem; flex-shrink: 0; }
-.foodio-menu__actions { position: absolute; right: 1rem; bottom: 1rem; display: flex; align-items: center; gap: .625rem; }
+.foodio-menu__item { padding-block: 2rem; } .foodio-menu__actions { position: static; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; margin-top: 1.25rem; } .foodio-menu__details, .foodio-menu__cart { flex: 1 1 auto; justify-content: center; }
 .foodio-menu__details { display: inline-flex; align-items: center; gap: .5rem; height: 50px; padding: 0 1.1rem; border-radius: .5rem; border: 2px solid color-mix(in oklch, var(--color-menu-title) 30%, transparent); color: var(--color-menu-title); font: 400 .95rem/1 var(--font-menu-heading); white-space: nowrap; transition: all .5s ease-in-out; }
 .foodio-menu__details:hover { border-color: var(--color-menu-accent); color: var(--color-menu-accent); }
 .foodio-menu__details svg { width: 1.25rem; height: 1.25rem; flex-shrink: 0; }
 .foodio-menu__cart { display: inline-flex; align-items: center; gap: .5rem; height: 50px; padding: 0 1.25rem; border-radius: .5rem; background: var(--color-menu-primary); color: oklch(1 0 0); font: 400 .95rem/1 var(--font-menu-heading); white-space: nowrap; box-shadow: none; transition: all .5s ease-in-out; }
 .foodio-menu__cart:hover { background: var(--color-flame-dark); color: oklch(1 0 0); }
 .foodio-menu__cart .foodio-menu__bag { width: 1.25rem; height: 1.25rem; }
-.foodio-menu__filters { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; margin: 0 auto 3rem; padding: .65rem; width: fit-content; max-width: 100%; border: 1px solid color-mix(in oklch,var(--color-charcoal) 12%, transparent); border-radius: 1rem; background: color-mix(in oklch,var(--color-cream-deep) 64%, var(--color-cream)); box-shadow: 0 12px 28px -22px var(--color-charcoal); }
-.foodio-menu__filter { flex-shrink: 0; position: relative; border-radius: .65rem; padding: .7rem .85rem; height: auto; gap: .5rem; background: transparent; color: var(--color-menu-text); font: 400 .9rem var(--font-menu-heading); letter-spacing: 0; border: 1px solid transparent; }
-.foodio-menu__filter:hover { background: color-mix(in oklch,var(--color-cream) 72%, transparent); color: var(--color-menu-accent); }
-.foodio-menu__filter--active { background: var(--color-flame); color: var(--color-cream); box-shadow: var(--shadow-pill); }
-.foodio-menu__filter--active:hover { background: var(--color-flame-dark); color: var(--color-cream); }
-.foodio-menu__filter svg { width: 20px; height: 20px; }
-.foodio-menu__count { font: 400 .75rem var(--font-menu-body); }
-.foodio-menu__check { width: 14px !important; height: 14px !important; }
+.foodio-menu__filters { display: flex; flex-wrap: nowrap; gap: .25rem; margin: 0 auto 3rem; padding: .35rem; width: fit-content; max-width: 100%; overflow-x: auto; scrollbar-width: none; border-radius: 999px; background: color-mix(in oklch,var(--color-cream-deep) 55%, transparent); scroll-snap-type: x proximity; mask-image: linear-gradient(90deg, transparent 0, #000 12px, #000 calc(100% - 12px), transparent 100%); }
+.foodio-menu__filters::-webkit-scrollbar { display: none; }
+.foodio-menu__filter { flex-shrink: 0; position: relative; isolation: isolate; scroll-snap-align: center; border-radius: 999px; padding: .55rem 1.1rem; height: auto; gap: .45rem; background: transparent !important; color: var(--color-menu-text); font: 400 .9rem var(--font-menu-heading); letter-spacing: 0; border: 0; transition: color .3s ease; }
+.foodio-menu__filter:hover { color: var(--color-menu-accent); }
+.foodio-menu__filter--active, .foodio-menu__filter--active:hover { color: var(--color-cream); }
+.foodio-menu__pill { position: absolute; inset: 0; z-index: -1; border-radius: 999px; background: var(--color-flame); box-shadow: var(--shadow-pill); }
+.foodio-menu__count { font: 600 .7rem var(--font-menu-body); opacity: .6; }
 .foodio-menu__filter:focus-visible, .foodio-menu__cart:focus-visible { outline: 2px solid var(--color-menu-accent); outline-offset: 3px; }
 @media (max-width: 1400px) {
   .foodio-menu__container { max-width: 1140px; }
@@ -67,8 +66,7 @@
 @media (max-width: 450px) {
   .foodio-menu__item { padding: 6rem 1.5rem 1.5rem; margin-top: 6rem; margin-left: 0; border-radius: 1rem; }
   .foodio-menu__image { width: 175px; height: 154px; top: -38%; left: 1.5rem; transform: none; }
-  .foodio-menu__filters { gap: .45rem; margin-bottom: 1.5rem; padding: .5rem; width: 100%; }
-  .foodio-menu__filter { flex: 1 1 calc(50% - .45rem); justify-content: center; padding-inline: .5rem; }
+  .foodio-menu__filters { margin-bottom: 1.5rem; }
   .foodio-menu__actions { position: static; margin-top: 1.25rem; flex-wrap: wrap; }
 }
 
