@@ -69,7 +69,7 @@ function Payments() {
     .sort((a, b) => b.createdAt - a.createdAt);
 
   return (
-    <div className="space-y-6">
+    <div className="admin-payments space-y-6">
       <header>
         <p className="text-[11px] font-black uppercase tracking-[0.3em] text-lux/70">Finance</p>
         <h1 className="mt-1 font-hero num-lux text-4xl tracking-wide">Payment records</h1>
