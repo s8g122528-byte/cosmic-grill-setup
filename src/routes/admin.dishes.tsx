@@ -18,12 +18,24 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api/client";
 import { invalidateMenuCache } from "@/lib/menu";
 import { Field, LuxSearch, Panel, fieldClass } from "@/components/admin/bits";
 
 export const Route = createFileRoute("/admin/dishes")({
   ssr: false,
+  head: () => ({
+    meta: [
+      { title: "Menu Management — Kennedy Moon Grill" },
+      { name: "description", content: "Manage Kennedy Moon Grill dishes, prices, availability and chef specials." },
+      { property: "og:title", content: "Menu Management — Kennedy Moon Grill" },
+      { property: "og:description", content: "Kennedy Moon Grill menu operations and dish catalogue." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "robots", content: "noindex" },
+    ],
+  }),
   component: DishesManagementPage,
 });
 
@@ -295,7 +307,7 @@ function DishesManagementPage() {
   const featuredCount = dishes.filter((d) => d.is_featured).length;
 
   return (
-    <div className="space-y-6">
+    <div className="admin-dishes space-y-6">
       {/* Page Header */}
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
@@ -310,13 +322,13 @@ function DishesManagementPage() {
           </p>
         </div>
 
-        <button
+        <Button variant="ghost"
           type="button"
           onClick={() => openEditModal()}
-          className="inline-flex items-center gap-2 rounded-full border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-5 py-2.5 text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_4px_20px_rgba(184,42,20,0.4)] transition hover:brightness-110 active:scale-95"
+          className="admin-dishes__add"
         >
           <Plus className="h-4 w-4" /> Add New Dish
-        </button>
+        </Button>
       </header>
 
       {/* Metric Tiles */}
@@ -324,22 +336,17 @@ function DishesManagementPage() {
         {(
           [
             { label: "Total Dishes", value: totalCount, icon: UtensilsCrossed, cls: "text-lux", chip: "bg-lux/10 text-lux border-lux/25", ruby: false },
-            { label: "Available (In Stock)", value: availableCount, icon: Check, cls: "text-emerald-400", chip: "bg-emerald-500/10 text-emerald-400 border-emerald-500/25", ruby: false },
+            { label: "Available (In Stock)", value: availableCount, icon: Check, cls: "text-jade", chip: "bg-jade/10 text-jade border-jade/25", ruby: false },
             { label: "Sold Out (Off Menu)", value: soldOutCount, icon: EyeOff, cls: "text-ruby", chip: "bg-ruby/10 text-ruby border-ruby/25", ruby: true },
             { label: "Chef Specials", value: featuredCount, icon: Sparkles, cls: "text-lux", chip: "bg-lux/10 text-lux border-lux/25", ruby: false },
           ] as const
         ).map((t, i) => (
           <motion.div
             key={t.label}
-            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.45, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            whileHover={reduce ? undefined : { y: -3 }}
-            className={`relative overflow-hidden rounded-2xl border p-4 shadow-[0_8px_28px_rgba(0,0,0,0.35)] ${
-              t.ruby
-                ? "border-ruby/25 bg-gradient-to-br from-[#1C1416] to-[#141110]"
-                : "border-lux/20 bg-gradient-to-br from-[#1C1A18] to-[#121110]"
-            }`}
+            initial={reduce ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+            className="admin-dishes__metric"
           >
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
@@ -417,41 +424,39 @@ function DishesManagementPage() {
           {filteredDishes.map((dish, i) => (
             <motion.article
               key={dish.id}
-              layout
-              initial={reduce ? { opacity: 0 } : { opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, amount: 0.15 }}
-              transition={{ duration: 0.45, delay: (i % 3) * 0.06, ease: [0.22, 1, 0.36, 1] }}
-              whileHover={reduce ? undefined : { y: -4 }}
-              className={`group relative flex flex-col overflow-hidden rounded-3xl border transition-colors ${
-                dish.is_available
-                  ? "border-lux/20 bg-gradient-to-b from-[#1C1A18] to-[#121110] shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-lux/50"
-                  : "border-white/10 bg-[#141211]/80 opacity-70"
-              }`}
+              layout={reduce ? false : "position"}
+              initial={reduce ? false : { opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                opacity: { duration: 0.25, delay: Math.min(i, 5) * 0.035 },
+                y: { duration: 0.35, delay: Math.min(i, 5) * 0.035, ease: [0.22, 1, 0.36, 1] },
+                layout: { duration: reduce ? 0 : 0.25 },
+              }}
+              className={`admin-dishes__card group relative flex flex-col overflow-hidden ${dish.is_available ? "" : "admin-dishes__card--sold"}`}
             >
               {/* Dish Top Image & Badges */}
-              <div className="relative h-44 w-full overflow-hidden bg-black/40">
+              <div className="admin-dishes__media relative h-44 w-full overflow-hidden">
                 {dish.image_url ? (
                   <img
                     src={dish.image_url}
                     alt={dish.name}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                    className="h-full w-full object-cover"
                     loading="lazy"
                   />
                 ) : (
-                  <div className="flex h-full w-full items-center justify-center bg-black/50 text-cream/20">
+                  <div className="flex h-full w-full items-center justify-center bg-panel-soft text-mist">
                     <UtensilsCrossed className="h-12 w-12" />
                   </div>
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#141211] via-transparent to-black/40" />
+                <div className="admin-dishes__image-shade absolute inset-0" />
 
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-wrap gap-1.5">
-                  <span className="rounded-full border border-lux/40 bg-black/70 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
+                <div className="absolute bottom-3 left-3 right-3 flex flex-wrap gap-1.5">
+                  <span className="rounded-full border border-lux/40 bg-ink-deep/90 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
                     {dish.category_name || "Mains"}
                   </span>
                   {dish.is_featured && (
-                    <span className="flex items-center gap-1 rounded-full border border-amber-500/40 bg-amber-500/20 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
+                    <span className="flex items-center gap-1 rounded-full border border-lux/40 bg-lux/20 px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider text-lux backdrop-blur-md">
                       <Sparkles className="h-3 w-3" /> Special
                     </span>
                   )}
@@ -459,13 +464,13 @@ function DishesManagementPage() {
 
                 {/* Quick Availability Badge */}
                 <div className="absolute top-3 right-3">
-                  <button
+                  <Button variant="ghost"
                     type="button"
                     onClick={() => toggleAvailability(dish)}
                     title={dish.is_available ? "Click to mark as Sold Out" : "Click to mark as Available"}
                     className={`flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-black uppercase tracking-wider shadow-lg backdrop-blur-md transition ${
                       dish.is_available
-                        ? "border border-emerald-500/40 bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30"
+                        ? "border border-jade/40 bg-ink-deep/90 text-jade hover:bg-panel-soft"
                         : "border border-ruby/50 bg-ruby/30 text-ruby hover:bg-ruby/40"
                     }`}
                   >
@@ -478,14 +483,14 @@ function DishesManagementPage() {
                         <EyeOff className="h-3 w-3" /> Sold Out
                       </>
                     )}
-                  </button>
+                  </Button>
                 </div>
               </div>
 
               {/* Body */}
               <div className="flex flex-1 flex-col gap-3 p-4">
                 <div>
-                  <h3 className="font-hero text-lg font-bold leading-snug text-frost transition group-hover:text-lux">
+                  <h3 className="admin-dishes__name text-lg font-bold leading-snug text-frost">
                     {dish.name}
                   </h3>
                   <p className="mt-1 line-clamp-2 text-xs leading-relaxed text-slate-dim">
@@ -504,7 +509,7 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Sizing & Pricing breakdown */}
-                <div className="mt-auto rounded-2xl border border-white/10 bg-black/30 p-3">
+                <div className="admin-dishes__price mt-auto py-3">
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-[10px] font-black uppercase tracking-[0.16em] text-slate-dim">
                       Base Price
@@ -528,32 +533,32 @@ function DishesManagementPage() {
                 </div>
 
                 {/* Actions Footer */}
-                <div className="flex items-center justify-between gap-2 border-t border-white/10 pt-3">
-                  <button
+                <div className="admin-dishes__actions flex flex-wrap items-center justify-between gap-2 pt-3">
+                  <Button variant="ghost"
                     type="button"
                     onClick={() => toggleAvailability(dish)}
                     className="rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-[10px] font-black uppercase tracking-wider text-cream/70 transition hover:border-lux/40 hover:text-lux active:scale-95"
                   >
                     {dish.is_available ? "Set Sold Out" : "Set Available"}
-                  </button>
+                  </Button>
 
                   <div className="flex items-center gap-1.5">
-                    <button
+                    <Button variant="ghost"
                       type="button"
                       onClick={() => openEditModal(dish)}
                       className="rounded-xl border border-lux/25 bg-lux/5 p-2 text-lux transition hover:bg-lux/15 active:scale-90"
                       title="Edit dish"
                     >
                       <Edit2 className="h-3.5 w-3.5" />
-                    </button>
-                    <button
+                    </Button>
+                    <Button variant="ghost"
                       type="button"
                       onClick={() => handleArchiveDish(dish)}
                       className="rounded-xl border border-ruby/30 bg-ruby/5 p-2 text-ruby transition hover:bg-ruby/15 active:scale-90"
                       title="Archive dish"
                     >
                       <Trash2 className="h-3.5 w-3.5" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -575,9 +580,10 @@ function DishesManagementPage() {
             />
 
             <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 15 }}
+              initial={reduce ? false : { opacity: 0, y: 12 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 15 }}
+              exit={reduce ? undefined : { opacity: 0, y: 8 }}
+              transition={{ duration: reduce ? 0 : 0.22 }}
               className="relative z-10 w-full max-w-xl max-h-[90vh] overflow-y-auto rounded-3xl border border-lux/30 bg-[#161413] p-6 text-cream shadow-[0_24px_64px_rgba(0,0,0,0.6)]"
             >
               <div className="flex items-center justify-between border-b border-white/10 pb-3">
@@ -594,13 +600,13 @@ function DishesManagementPage() {
                     </p>
                   </div>
                 </div>
-                <button
+                <Button variant="ghost"
                   type="button"
                   onClick={() => setModalOpen(false)}
                   className="rounded-full p-1.5 text-cream/50 hover:bg-white/10 hover:text-cream"
                 >
                   <X className="h-5 w-5" />
-                </button>
+                </Button>
               </div>
 
               <form onSubmit={handleSaveDish} className="mt-5 space-y-4">
@@ -740,7 +746,7 @@ function DishesManagementPage() {
 
                 {/* Availability switches */}
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <button
+                  <Button variant="ghost"
                     type="button"
                     onClick={() => setFormAvailable(!formAvailable)}
                     className={`inline-flex items-center gap-2.5 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition active:scale-95 ${
@@ -753,9 +759,9 @@ function DishesManagementPage() {
                       <span className={`absolute top-0.5 h-2.5 w-2.5 rounded-full bg-cream shadow transition-all ${formAvailable ? "left-3" : "left-0.5"}`} />
                     </span>
                     {formAvailable ? "Available · In Stock" : "Sold Out"}
-                  </button>
+                  </Button>
 
-                  <button
+                  <Button variant="ghost"
                     type="button"
                     onClick={() => setFormFeatured(!formFeatured)}
                     className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-black uppercase tracking-wider transition active:scale-95 ${
@@ -766,25 +772,25 @@ function DishesManagementPage() {
                   >
                     <Sparkles className="h-3.5 w-3.5" />
                     {formFeatured ? "Chef Special · Featured" : "Mark as Chef Special"}
-                  </button>
+                  </Button>
                 </div>
 
                 <div className="flex items-center justify-end gap-2 border-t border-white/10 pt-4">
-                  <button
+                  <Button variant="ghost"
                     type="button"
                     onClick={() => setModalOpen(false)}
                     className="rounded-xl border border-white/20 px-4 py-2.5 font-display text-xs font-black uppercase tracking-[0.14em] text-cream/70 transition hover:bg-white/10 active:scale-95"
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button variant="ghost"
                     type="submit"
                     disabled={saving}
                     className="flex items-center gap-1.5 rounded-xl border border-lux/40 bg-gradient-to-r from-flame to-[#D94824] px-6 py-2.5 font-display text-xs font-black uppercase tracking-[0.16em] text-cream shadow-[0_8px_24px_rgba(184,42,20,0.4)] transition hover:brightness-110 active:scale-95 disabled:opacity-50"
                   >
                     {saving && <Loader2 className="h-4 w-4 animate-spin" />}
                     {saving ? "Saving…" : editingDish ? "Save Changes" : "Create Dish"}
-                  </button>
+                  </Button>
                 </div>
               </form>
             </motion.div>
