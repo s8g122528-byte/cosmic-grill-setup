@@ -181,6 +181,7 @@ function AdminLayout() {
 
   return (
     <ConsoleShell
+      className="admin-caddy-shell"
       brand={restaurantName}
       title={consoleTitle}
       nav={nav}

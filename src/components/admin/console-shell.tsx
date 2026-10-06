@@ -19,6 +19,7 @@ export type ConsoleNavItem = {
  */
 export function ConsoleShell({
   brand,
+  className,
   title,
   badge,
   nav,
@@ -27,6 +28,7 @@ export function ConsoleShell({
   children,
 }: {
   brand: string;
+  className?: string;
   title: string;
   badge: ReactNode;
   nav: readonly ConsoleNavItem[];
@@ -82,7 +84,7 @@ export function ConsoleShell({
   );
 
   return (
-    <div className="console-shell min-h-screen text-frost">
+    <div className={cn("console-shell min-h-screen text-frost", className)}>
       {/* Mobile top bar */}
       <header className="sticky top-0 z-40 lg:hidden">
         <div className="flex items-center gap-3 border-b border-lux/15 bg-ink-deep/85 px-4 py-3 backdrop-blur-xl">
