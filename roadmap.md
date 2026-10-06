@@ -1,4 +1,5 @@
 # Menu reference update
+- [ ] Add an admin-only animated dot-grid background and refine dish motion; verify rendering and reduced-motion behavior.
 - [x] Refresh cart layout, reference-style payment selector, compact OTP and verified phone lock. Verified real menu-to-cart navigation and all payment choices; mocked OTP send/verify tests pass. No real OTP or order was sent.
 - [x] Generate five transparent, consistently sized menu food images.
 - [x] Apply images only within the menu and add reduced-motion-safe image animation.
