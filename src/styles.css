@@ -3680,8 +3680,8 @@ img[loading="lazy"]:not([style]) {
   inset: -28px;
   z-index: -1;
   pointer-events: none;
-  background-image: radial-gradient(circle, var(--admin-grid-dot) 1px, transparent 1.5px);
-  background-size: 28px 28px;
+  background-image: radial-gradient(circle, var(--admin-grid-dot) 1.5px, transparent 2.1px);
+  background-size: 30px 30px;
   animation: admin-grid-drift 36s linear infinite;
 }
 @keyframes admin-grid-drift { to { transform: translate3d(28px, 28px, 0); } }
